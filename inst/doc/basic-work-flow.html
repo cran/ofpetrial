@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Basic Workflow</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Basic Workflow</h1>
+
+
+
+<p>Here, we demonstrate a typical workflow of using the
+<code>ofpetrial</code> package to create a trial design through an
+example of two-input on-farm experiment trial.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ofpetrial)</span></code></pre></div>
+<div id="create-experimental-plots" class="section level1">
+<h1>Create experimental plots</h1>
+<div id="prepare-plot-information-for-the-inputs" class="section level2">
+<h2>Prepare plot information for the inputs</h2>
+<p>We start with specifying plot and machine information for inputs
+using <code>prep_plot</code>, which simply creates a data.frame of the
+specified information with some internal unit conversion of length
+(e.g., feet to meter).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#--- for nitrogen ---#</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n_plot_info <span class="ot">&lt;-</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep_plot</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">input_name =</span> <span class="st">&quot;NH3&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">unit_system =</span> <span class="st">&quot;imperial&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">machine_width =</span> <span class="dv">30</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">section_num =</span> <span class="dv">1</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">harvester_width =</span> <span class="dv">30</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot_width =</span> <span class="dv">30</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(n_plot_info)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 11</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ input_name      &lt;chr&gt; &quot;NH3&quot;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ unit_system     &lt;chr&gt; &quot;imperial&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ machine_width   &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ section_num     &lt;dbl&gt; 1</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ section_width   &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ harvester_width &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ plot_width      &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ headland_length &lt;dbl&gt; 18.288</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ side_length     &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ min_plot_length &lt;dbl&gt; 73.152</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ max_plot_length &lt;dbl&gt; 91.44</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#--- for seed ---#</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>seed_plot_info <span class="ot">&lt;-</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep_plot</span>(</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">input_name =</span> <span class="st">&quot;seed&quot;</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">unit_system =</span> <span class="st">&quot;imperial&quot;</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">machine_width =</span> <span class="dv">60</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">section_num =</span> <span class="dv">24</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">harvester_width =</span> <span class="dv">30</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot_width =</span> <span class="dv">30</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(seed_plot_info)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 11</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ input_name      &lt;chr&gt; &quot;seed&quot;</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ unit_system     &lt;chr&gt; &quot;imperial&quot;</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ machine_width   &lt;dbl&gt; 18.288</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ section_num     &lt;dbl&gt; 24</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ section_width   &lt;dbl&gt; 0.762</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ harvester_width &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ plot_width      &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ headland_length &lt;dbl&gt; 36.576</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ side_length     &lt;dbl&gt; 9.144</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ min_plot_length &lt;dbl&gt; 73.152</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ max_plot_length &lt;dbl&gt; 91.44</span></span></code></pre></div>
+</div>
+<div id="create-experimental-plots-1" class="section level2">
+<h2>Create experimental plots</h2>
+<p>Now that plot and machine specifications for the inputs are ready, we
+can create experiment plots based on them using
+<code>make_exp_plots()</code>. Since this is a two-input case, you
+create a list of plot information and the provided that to
+<code>make_exp_plots()</code> along with the path to the field boudary
+and ab-line files (you can alternatively provide those data as
+<code>sf</code> objects.).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>input_plot_info <span class="ot">&lt;-</span> <span class="fu">list</span>(n_plot_info, seed_plot_info)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">&lt;-</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_exp_plots</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">input_plot_info =</span> input_plot_info,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">boundary_data =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;boundary-simple1.shp&quot;</span>, <span class="at">package =</span> <span class="st">&quot;ofpetrial&quot;</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">abline_data =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ab-line-simple1.shp&quot;</span>, <span class="at">package =</span> <span class="st">&quot;ofpetrial&quot;</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">abline_type =</span> <span class="st">&quot;free&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ In argument: `experiment_plots_dissolved = list(...)`.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ In row 1.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Caused by warning:</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ! package &#39;sf&#39; was built under R version 4.2.3</span></span></code></pre></div>
+<p>The experiment plots created by <code>make_exp_plots()</code> is
+stored in <code>exp_plots</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>exp_data<span class="sc">$</span>exp_plots</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Simple feature collection with 369 features and 3 fields</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geometry type: POLYGON</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dimension:     XY</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; First 10 features:</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    plot_id poly_line strip_id                       geometry</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1        1       1_1        1 POLYGON ((352997.6 4331460,...</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2        2       1_1        1 POLYGON ((352999 4331540, 3...</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3        3       1_1        1 POLYGON ((353000.5 4331621,...</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4        4       1_1        1 POLYGON ((353001.9 4331702,...</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5        5       1_1        1 POLYGON ((353003.3 4331782,...</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6        6       1_1        1 POLYGON ((353004.8 4331863,...</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7        7       1_1        1 POLYGON ((353006.2 4331943,...</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8        8       1_1        1 POLYGON ((353007.7 4332024,...</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9        9       1_1        1 POLYGON ((353009.1 4332104,...</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       1       1_1        2 POLYGON ((353006.7 4331460,...</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Simple feature collection with 369 features and 3 fields</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geometry type: POLYGON</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dimension:     XY</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; First 10 features:</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    plot_id poly_line strip_id                       geometry</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1        1       1_1        1 POLYGON ((352997.6 4331460,...</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2        2       1_1        1 POLYGON ((352999 4331540, 3...</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3        3       1_1        1 POLYGON ((353000.5 4331621,...</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4        4       1_1        1 POLYGON ((353001.9 4331702,...</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5        5       1_1        1 POLYGON ((353003.3 4331782,...</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6        6       1_1        1 POLYGON ((353004.8 4331863,...</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7        7       1_1        1 POLYGON ((353006.2 4331943,...</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8        8       1_1        1 POLYGON ((353007.7 4332024,...</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9        9       1_1        1 POLYGON ((353009.1 4332104,...</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       1       1_1        2 POLYGON ((353006.7 4331460,...</span></span></code></pre></div>
+<p><code>exp_data$exp_plots</code> is a list of experimental plots in
+<code>sf</code>. The first element is for nitrogen and the second for
+seed following the order of information you provided in
+<code>input_plot_info</code>. You can access the individual experiment
+plots (an <code>sf</code> object) like this.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>exp_data<span class="sc">$</span>exp_plots[[<span class="dv">1</span>]]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Simple feature collection with 369 features and 3 fields</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geometry type: POLYGON</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dimension:     XY</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; First 10 features:</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    plot_id poly_line strip_id                       geometry</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1        1       1_1        1 POLYGON ((352997.6 4331460,...</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2        2       1_1        1 POLYGON ((352999 4331540, 3...</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3        3       1_1        1 POLYGON ((353000.5 4331621,...</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4        4       1_1        1 POLYGON ((353001.9 4331702,...</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5        5       1_1        1 POLYGON ((353003.3 4331782,...</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6        6       1_1        1 POLYGON ((353004.8 4331863,...</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7        7       1_1        1 POLYGON ((353006.2 4331943,...</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8        8       1_1        1 POLYGON ((353007.7 4332024,...</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9        9       1_1        1 POLYGON ((353009.1 4332104,...</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       1       1_1        2 POLYGON ((353006.7 4331460,...</span></span></code></pre></div>
+<p>We can visualize the layout of the experiment plots using
+<code>viz()</code> with <code>type = &quot;layout&quot;</code> option.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">viz</span>(exp_data, <span class="at">type =</span> <span class="st">&quot;layout&quot;</span>, <span class="at">abline =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAYAAAAUg66AAAAEDmlDQ1BrQ0dDb2xvclNwYWNlR2VuZXJpY1JHQgAAOI2NVV1oHFUUPpu5syskzoPUpqaSDv41lLRsUtGE2uj-ZbNt3CyTbLRBkMns3Z1pJjPj_KRpKT4UQRDBqOCT4P9bwSchaqvtiy2itFCiBIMo-ND6R6HSFwnruTOzu5O4a73L3PnmnO9-595z7t4LkLgsW5beJQIsGq4t5dPis8fmxMQ6dMF90A190C0rjpUqlSYBG-PCv9rt7yDG3tf2t_f_Z-uuUEcBiN2F2Kw4yiLiZQD-FcWyXYAEQfvICddi-AnEO2ycIOISw7UAVxieD_Cyz5mRMohfRSwoqoz-xNuIB-cj9loEB3Pw2448NaitKSLLRck2q5pOI9O9g_t_tkXda8Tbg0-PszB9FN8DuPaXKnKW4YcQn1Xk3HSIry5ps8UQ_2W5aQnxIwBdu7yFcgrxPsRjVXu8HOh0qao30cArp9SZZxDfg3h1wTzKxu5E_LUxX5wKdX5SnAzmDx4A4OIqLbB69yMesE1pKojLjVdoNsfyiPi45hZmAn3uLWdpOtfQOaVmikEs7ovj8hFWpz7EV6mel0L9Xy23FMYlPYZenAx0yDB1_PX6dledmQjikjkXCxqMJS9WtfFCyH9XtSekEF-2dH-P4tzITduTygGfv58a5VCTH5PtXD7EFZiNyUDBhHnsFTBgE0SQIA9pfFtgo6cKGuhooeilaKH41eDs38Ip-f4At1Rq_sjr6NEwQqb_I_DQqsLvaFUjvAx-eWirddAJZnAj1DFJL0mSg_gcIpPkMBkhoyCSJ8lTZIxk0TpKDjXHliJzZPO50dR5ASNSnzeLvIvod0HG_mdkmOC0z8VKnzcQ2M_Yz2vKldduXjp9bleLu0ZWn7vWc-l0JGcaai10yNrUnXLP_8Jf59ewX-c3Wgz-B34Df-vbVrc16zTMVgp9um9bxEfzPU5kPqUtVWxhs6OiWTVW-gIfywB9uXi7CGcGW_zk98k_kmvJ95IfJn_j3uQ-4c5zn3Kfcd-AyF3gLnJfcl9xH3OfR2rUee80a-6vo7EK5mmXUdyfQlrYLTwoZIU9wsPCZEtP6BWGhAlhL3p2N6sTjRdduwbHsG9kq32sgBepc-xurLPW4T9URpYGJ3ym4-8zA05u44QjST8ZIoVtu3qE7fWmdn5LPdqvgcZz8Ww8BWJ8X3w0PhQ_wnCDGd-LvlHs8dRy6bLLDuKMaZ20tZrqisPJ5ONiCq8yKhYM5cCgKOu66Lsc0aYOtZdo5QCwezI4wm9J_v0X23mlZXOfBjj8Jzv3WrY5D-CsA9D7aMs2gGfjve8ArD6mePZSeCfEYt8CONWDw8FXTxrPqx_r9Vt4biXeANh8vV7_-_16ffMD1N8AuKD_A_8leAvFY9bLAAAAOGVYSWZNTQAqAAAACAABh2kABAAAAAEAAAAaAAAAAAACoAIABAAAAAEAAAEgoAMABAAAAAEAAAEgAAAAAKtAJY0AACpSSURBVHgB7Z0JlBxFGcdrdzabmxBC5FIhgIIcgkoUz8elKHiieIIgKF4g3ng-0efxPAEB8QYPVMT7PlBBEcVbCZ6g8UACGpIQk80mu1t-v29Sk97OzO70bkPtwr_e65np6uqq6t9U_7vqq6N7orkgJwIiIAIZCPRmSFNJioAIiIATkACpIIiACGQjIAHKhl4Ji4AISIBUBkRABLIRkABlQ6-ERUAEJEAqAyIgAtkISICyoVfCIiACEiCVAREQgWwEJEDZ0CthERABCZDKgAiIQDYCEqBs6JWwCIiABEhlQAREIBsBCVA29EpYBERAAqQyIAIikI2ABCgbeiUsAiIgAVIZEAERyEZAApQNvRIWARGQAKkMiIAIZCMgAcqGXgmLgAhIgFQGREAEshGQAGVDr4RFQAQkQCoDIiAC2QhIgLKhV8IiIAISIJUBERCBbAQkQNnQK2EREAEJkMqACIhANgISoGzolbAIiIAESGVABEQgGwEJUDb0SlgEREACpDIgAiKQjYAEKBt6JSwCIiABUhkQARHIRkAClA29EhYBEZAAqQyIgAhkIyAByoZeCYuACEiAVAZEQASyEZAAZUOvhEVABCRAKgMiIALZCEiAsqFXwiIgAhIglQEREIFsBCRA2dArYREQAQmQyoAIiEA2AhKgbOiVsAiIgARIZUAERCAbAQlQNvRKWAREQAKkMiACIpCNgAQoG3olLAIiIAFSGRABEchGQAKUDb0SFgERkACpDIiACGQjIAHKhl4Ji4AISIBUBkRABLIRkABlQ6-ERUAEJEAqAyIgAtkISICyoVfCIiACEiCVAREQgWwEJEDZ0CthERABCZDKgAiIQDYCEqBs6JWwCIiABEhlQAREIBsBCVA29EpYBERAAqQyIAIikI2ABCgbeiUsAiIgAVIZEAERyEZAApQNvRIWARGQAKkMiIAIZCMgAcqGXgmLgAhIgFQGREAEshGQAGVDr4RFQAQkQCoDIiAC2QhIgLKhV8IiIAISIJUBERCBbAQkQNnQK2EREAEJkMqACIhANgISoGzolbAIiIAESGVABEQgGwEJUDb0SlgEREACpDIgAiKQjYAEKBt6JSwCIiABUhkQARHIRkAClA29EhYBEZAAqQyIgAhkIyAByoZeCYuACEiAVAZEQASyEZAAZUOvhEVABCRAKgMiIALZCEiAsqFXwiIgAhIglQEREIFsBCRA2dArYREQAQmQyoAIiEA2AhKgbOiVsAiIgARIZUAERCAbAQlQNvRKWAREQAKkMiACIpCNgAQoG3olLAIiIAFSGRABEchGQAKUDb0SFgERkACpDIiACGQjIAHKhl4Ji4AISIBUBkRABLIRkABlQ6-ERUAEJEAqAyIgAtkISICyoVfCIiACEiCVAREQgWwEJEDZ0CthERABCZDKgAiIQDYCEqBs6JWwCIiABEhlQAREIBsBCVA29EpYBERAAqQyIAIikI2ABCgbeiUsAiIgAVIZEAERyEZAApQNvRIWARGQAKkMiIAIZCMgAcqGXgmLgAhIgFQGREAEshGQAGVDr4RFQAQkQCoDIiAC2QhIgLKhV8IiIAISIJUBERCBbAQkQNnQK2EREAEJkMqACIhANgISoGzolbAIiIAESGVABEQgGwEJUDb0SlgEREACpDIgAiKQjYAEKBt6JSwCIiABUhkQARHIRkAClA29EhYBEZAAqQxUIvDPby4Ll7z-mrBhQ6XTFFgE2hLoa-srz2lNYPXq1eFvf_tb2GabbcLIyIhvw8PDrd_Jr_g9c-bMMH_-_NDb2xsIOzQ05Fv6nb6Xve7K8LxfnRE-f5-rwjHHPGhac1Lm8xOQAOX_D2rPwV_-8hcXoG233dYFBVEpb41Go-WH-Kxbty6sXLnSRYqwHO_r6_PvGTNmBLZZs2aF3p6Znt-bb76h9nwrwjsfAQnQHfA_p7ay5557hvve976jrs68ww2mG1YpstpNc-N3jCHstVcIixaNCh7WrAnhlltCGBwMVitqht-48WoPNGtWY3Rg7YnABAhIgCYAbaqfQtPqF79YEA49tCkcPT3NHCMiSXCSH-KDn1V6glWE_Jv9JDj4pzB8n2TC1XStH8lD3yJQmYAEqDKyqX8CArRyZb_ZgIIbixEWtk2bQti4sSku7Pf3N8WHGg7H2Mcfhx9bCodgcW7jJjtoQtbTIwFyUPqYFAH1gk0K39Q8mSZYjNh9mrUXckmtBhFh4ze1GVzyS_vpm3OLYVO45lkcMxWSE4FJEpAATRLgVDydGtDwcI8LCIKC4OAQFTYcfmwISzuxIQz-nM-WBCiGnmD9ZOa3OVICyonABAmoCTZBcFP5NARoaKjRMjQjIBidcTSjaG6xTxOreAy_JFaEYcMRDueGaxO23tDs2m_66lMEJk5AAjRxdlP2TARo-fL-sGLFaCM0GUZwkqNWU9zHv1jrSeH4TmGpAfVZDYg05ERgsgQkQJMlOAXPRxwWLx4Ju-4awtq1TfFIBmZqQKnmk_yo6eCHpmB0ZqMXDD-OsW_DgJrNsH-YAMVhOy4b0BT866ddlmQDmnZ_2fgZRoBGRnpdMAiNsFDTSbWdVJvhGH7UelLNh7BsLZtP4TyPw2pADTNAqwYEPbnJEpAATZbgFDyf2snwcFOAkrCQzU7CUhQbwiWh4twkVkmoolmAGmYDiikQJ8iJwAQJqAk2QXBT-TRqJ7fe2uvNLyaN0ozCgGyzK7xpReuJfY7h5zUbq-ngT1j8cPzGrzjx9KFWA-rpGfEpGs1Q-hSBiROQAE2c3ZQ9EwG64Ya-8J__NGs9KaPUZnDjVV5SracZumkDsmlhbgeKq3tDX--wNdlUeU589D1xAhKgibObsmciQLvtNmLzwYJNMm0ak6nVJAPz-vVNPzQEP4zRGKdTTadonMafpht-bCNrECDrC0tqNmUpKGPTgYAeY9PhX6qYRwQIIzQOnUg1GoQE0UkbNSH8Uo0oheM8_AiHXwqDn9uA1AQDkVwNBCRANUCcalEgQNhukviQv6KIsF8UG_bbiVI634UH8bHNGl-2JMeIhVfRgZvc5AioCTY5flPybHrBbr65N6xatWXkM-JBc4rmF8bl__1v66zPmdM0OiNWhCk7BGmpzTGLwzJCl9lof2IEJEAT4zalz0pG6P_-t1nzaZdZjMoICrYhBhlSY0Kckps3b3SvGRUebEDDqxqhf8aInWsny4nAJAlIgCYJcCqejgDtvfeILSjW7E9Po58RGozOaAc1HIzOCBF-CBHh2DheNk7j50boVWaEbkR1w0_FP34a5ilLQ_7GG28MX_7ylx3XT3_60_Cb3_xmwugGBgYmdO7vf__78O1vf7vjucU8dgw0zoGJ5m2caP3wxRdfbON8bJ5FG9e0AfW43WdwcMDG_Gx0URkYWG81nWH_zWmISrLvJBsQ_vglm1E53LANQ2xYL1hOG1Dxv1H54R-q7sYqP8XYfvzjH4drrrnGvT71qU_Z-LJbi4cn_TuLAP35z38Ob3vb2zzzV1999YQF6Pvf_354_vOfPyEIn_zkJ-1pb4_7Dq6Yxw5BxvSeTN7GjHjzwVe84hXhv7Sx2rgkQBxat26tzenasFmABk2AEI_2RmfCcwwBwvGNSOGXBMkFqCevABX_G5Wf5n9V9XOs8lOMC9H57ne_616f-cxn8goQC5ejhv_-979beeTtCWts8eBBm7n4pz_9yQqqWTA3OxY5Z8j-ddddZ0bPNlZPC_fsZz87PPnJT06n-BOaAlae7HjTTTeF3_3ud62nPulQiyHtoiojKn_84x-tibHFiko-2P_rX__aSucHP_hBOOywwzxfG6wtQph__vOfrePlH-SH6yBvXHNynIfj3H_84x_-u1PeEAzyXDwfLrAjb8U8e0T20SldjsOWBehTHtI5pH_DDT3GJYSBgTm29bvReWho23DjjY1w_fXR8hvNUB1tsGK0sNHS5xpCMMwmbE2_5cujXVPwWfVcplVcw5DVgJoiZqpU0an8TI_y0-lvvfDCC8NOO-3k5Zf7jrL5hz_8YdT9x7ncT8uWLdvKv228Voi7ch_4wAfibrvtFh_zmMfEu9zlLvGUU07x86666qq4zz77xHvc4x7xyCOPjDvvvHO0m8yP7bLLLvHhD394tBs9Wsbjueee6_6XX355fMADHuC_X_rSl8a3vOUt_vtHP_pR3H777eMRRxwR99prr_iNb3wj2k0ZH_e4x8X73Oc-7r9gwYL41a9-Na5YsSLuv__-Hu-ZZ57p57_85S-Pthh7fOADHxjvfve7RxNL999xxx3jIx7xiLjddttF0uDcww8_3I-9-MUv9vyR3oEHHhgf9ahHeZrFPBrMeK973cvjIE3SsJvez-caTUD9erj2008_vW3eXvWqV8UddtghPuQhD3GOJpJ-_mmnneaMFi1a5Oe65-aPsdKFJwwf9KAHRZi8_e1vb53Kf7XjjiNWf6EOY1WesOX3zJnD8eT-i-I1YV_b9tu87Ruv7dkvXtu7f1zWs3_Bfx_3_735c-wPtl0f9ojXNfaOq3ZZEjftc0ArzfF-qPxMn_JT_C9f8IIXxHe_-93udde73jXaAy9yz3M_3vve946HHHJIXLhwYbRakof53ve-5-Wc-8veyhI_8pGPFKPb6jdP0XGdPVHjk570pHi9PTpx9s6paDaAaAromTFla4nOBRdcEB_60Id6OG7ON77xjf7bajDRXv8S__Wvf8XizV0UIIQC0cH97Gc_i8cff3y0Wk985jOf6X58vOMd74jHHnus73_sYx-LT33qU_33F7_4xbjrrrtGe8r6_llnnRWtduW_iff888-PXAfu4x__eOuGRYAQHoSO44BDKIt5PO-88-KHP_xhP5ePgw46KH72s5_1fa7xDW94g_-Gi73KxrkU83azVTXudre7RXsyeDjiIl0cAnTooYd62vAsurHSRYASW5j29_fHv__97346_8FRR43YwyDG-fNvtgKy2gQpxp6elfbw2BifsPDb8ZxwYvzgrFPjB2aeHi-Y8fx4ft9z4oXzT4_n9Z5i-6fGD80-PX5k7mnx3J6T7PtFFtb2Z70wXhqOjZfMOSFed_Tj4tBpLylmt-NvlZ_pVX6Kf2QnAeKe5wGJ4-HHQxjH_XPZZZf5bx7097znPVv3nXuWPrrqBaPL9UMf-lD4_Oc_H84--2y32VihatlQrPYQrIbgNaxHP_rRwUSl1YR6whOe4P5Wawqmmva2hl8E3ldVdjRhMKraBfihpUuXBhMK__3KV74ymAp7uj_5yU9aaRXjwP_oo48OcxjMYo5m3X777Rfe9773-f7DHvYws2eYQcPct771rXDGGWf4bz7IM-_Awh111FEBw6bVdHyfD-xM3_zmN8PrX_96zwPNHqqZyXE-zmqI3ixaX-zPNn8TR-tB6g_Pfe5zPRxNEWwX73nPe3zfBNvzlvLnnvYxXrr2UPCgJoKe31_-8pfBhNabg8uWHWJV5T3tONfctPvwTZ3oqv6Hha809g47Lrq794QNDw_Y95qww3bbh7-vvTHMnLHAK02Nnk1hINwatp-zs8UxK8yLa8MOG64NMxYuCq96wV_CHsaqG6fyM73KTzIFvOQlL-n491LW9913Xz9urZ-ASeM_Nvnwyiuv9Pv2E5_4hB9bZYPRuJ-sVdI2rq4EiBuKd0xZ8ys88pGPDAiCPdH9ZivHik2DF93xYruy41gSiPIx3srJOSaQrUPYS0xFw3HHHReseRWsthC4Wa0J1gqTflj10G1EaR-BwLaS8jGPgS3miJ_2qVUfU9BR3-3yaM0qt32ddNJJ4cQTT_R8FPNpVdBWHPQOFY9xgH3e0_W85z2vFa74I-Wt6Mfv8dIt9kRxvRQExBFbE4I3MNBjaTdFt6m9TQEi7kaDY00j88gIv7esHzRnjvXLm3DNmDEzLFyIoM_wbvvGiL0t1dZDnGnd8GWxJM5OTuVn-pQf7JxJgNJDud3_auaMlnexLFDusOvyIkscZZ6y38l1ZUm8wd5mh6HzXe96l9cQrHni8SVjKsbn3_72t-736U9_Oli70H_zcckll_hvbnprIgRrvrSOFX9QKzJ7Rktc6EU6-eSTXT3NJuS1Ks61JloLEG_qTF3dT3ziE71mgwrjqD3d__7336q7mFpC-YV9X_va12wQ3nrfvvKVr4zKP3Gh6i972cuCNQVdXH_-85-PMiQTpuzKeSPdJUuWhIMPPthFApbFP658PvvjpctThpoowxgwvlPjs6adP20ajd3tehrGZ66NiF7gLySMcTsTpz4zNPdb-J2tMwGDczBjYb-J9SL7f3ge7WThZ9jWb0-0mXZev229ZrAOYc3KTWETYjRki5K1ecC0uwb8VH6mT_mhd-w1r3mNbxicq7jFixcHs0v6fU45NztseNaznjXmvdJVDYgn6zHHHBPud7_7efPJjM5h9913914hMkgT4GlPe5o_6c0g2hIRjjGOgOYZNQu68Yq1BY4X3ete97rwlKc8Jbz5zW_21wCfc845wQy74fGPf3ygCUWNBnH7whe-4KeZ7cYV1ozUPq6IGgpqCzjykcIV06D5ZcbyopenlZqQXOfTn_70cMUVV7TC8KdQAyM_iIbZbFrX3gpU-lHOG81Saw_7xpPF7EClM7beHS9devto_vJwSPEhSNSMTOu9eWXDB000B62JOcu65Aftd7-JR7Rja-29YQutcLA20LCJ-gZjNt--R6wpvM7iaNi1brT3xfeHuXPnebiFG6wGtKbParHV5oKp_Eyf8rN1KazmY3ZJ1wKz1frDkWac2WA7R2LNg66d2Wii1ThGhccibjUK97vllltGHcNAa1W6aO3AMQ1Ro06yHWtClL3cD2Nm2WG4LebJRMrTK4dL-xjGCJMcxmAbk-QG4mTATseK36STer6K_mP9LucNQ3eZ0Vjnc2y8dImPeJPjGqy71HrsovUoxmh_Qdx992hG8Gi9E1v8liyJZrSPbpy2DjjrTYzWO9fc-L1w4ZD7EQZ_DNoHbLs83jP8KR651x8jvR1VncpPs-e0W245yk-3eRsvHB0v3biuakBJvjrZKtLxTrWbdkbndE67b-uS3sq7nR-BeNrT3EmONihbJ2dd4W0PYbcay5FOsd07Vth0rJw3aj6dGKVzyt_jpVuOL9WAsPkkc5pViqw2k-w9W_yTXwqXbEJ2qV4D4jz82Cdsn70NdZPZgHobG517Oa_j7av8bLGbjMeK4znKTzf56iYMzbFuXCUBahchzQrrhmt3KNjYj7GrX23Pun09MSoXBez2Tb3-1BAg7DNJgBARXFNUmr_xY0t-hGU_iU0Kz34SJfxmRIzQsy3-jZVsQM1U23-q_LTncmfx7aGadGe52DvDda5evdqHDBx33NNcVDpdc6r9JIEiHH64YolIQob_fmFZ-G9YFO67_5rwmgtWhgc_-MF4y4nAhAlMugY04ZR14m1CwOwGZmyeFfbYI7ghmloOPaJ0Wtkh3_CjlcqGADFrBdFJM-AxTOPHsdmzm-E4d4d1Q2HFyr7QP7NaN_xtcqGK9A5BQAJ0h_gbt1wETTCTGxcgqwx5rQahQVyYe2sdiS42yQ-hoZaDwDAWE7FCoBCkJEz8diEzCxDd8I0-Lcexhbh-TYaAFTW5OxKBJECpGYUe8TvtF5tUSViSH2HZ2E9-xXNnmBGagYjWQ1-bDeiOxF7XUp1AHwMHL7_88nHPZDQyo5DbuV_96lducLYJlz7Yrl2Ydn6vfe1rfbBSmqLQLkw3fkzDuOiii4LNyfJxQ92cUwzDyGGbBFv0mtBvmx_mY50YDMkYnsc-9rETiqfTSYwK5xox3DIwsp1jqsyKFRihj_Zay_r1AzYgcYO9qnmB-TVHOydR4nyW6lizZsCaY_Nt63OhaorPsA1iHLRzh7ypNnv2zBA3NmtAvVZToocGp_LDYM7pUX78D5sCH6wFxoBim7MYGPEYmeWaNmawWh59xnvy4_viiy_u2K1_6aWX-jk256NjmHYHdrMBJjaCud2hSn4mPp5-mv3e7ck2ethn8NvAx25P6RjO5nb5BF0mxD7jGc_wSbodA0_wgC194NfJ_5Mm7ZajOuCAA-LBBx9rk2JT3YXZ8EM2EXXEtuTHxFSbfNHL_pBtm2xrzphvhuE3_sVtUzw0XGYTNobi049YFu2h40mr_BwZp0v5KZeVXPuUGcow49f6bCmMwJYco30Zzs8ESqZGdONsyQ2fisGI1-nkmMbBqoidanZVroXpGTR_Pve5z3WcblIlvvHCPuc5zwnXXnutj_guh-WVPDZQ3adfbNiwyew7gzbqeZ7Zd3pahmjsPQyfGhxcbyOp19qI50VmJ5rptqJ1624Jq1f_z8Y97WJNLTM690ebmrEi9K3_t72U2WpX1gRLNSCVn-lZfsplJtd-JRsQs7iXL19u1fTmhE4WCMMx8WybbbbZyi7A1AnmgH3961_3-UrlWeLdXDTziGy0r6fJDcf8qDQHbbzzmR_161__2rulyXfRcSwtIMaM3XRdhGFWvq0b5CvB2VIXxdPa_iaPKS5YsF90LCHKqnLMgIdh0XViWgxT_o3gkwYPivau15rCwabNYFhm1cd1Yd68EROZYNMomr1aCBA9Y40GRutNJij0bBFb9Hll8-bNt__VArnrsfPnh9-FvcLhs68Iu-9vy5JxckXX6VpVfm7f8sPcTe5J7o00l7L8V3LPMcOdmexj3bfdhEMvMNOwEsZW9265GmY2BK8e2Ryu8qFoy5j6MdbWsQz79t73vje2a4KxHk5qztnT0sOy2Fix6dBNE4yFwFgPiIW8rKBGm03vC3CRbnLtmmDf-c53fOEv8mk3i6fPQme27IefZvBb15CuxUD7tZiY-rF0ni3zMeY0DPKY4uCbxc1wxGfz06y509PKg836jx_84Af9OB-dmLYCFH6kJhhrHZ144omepk2kLYSIvrbR0qXP8KkY1nKOs2atsXA32pSMobjHHs0pGbaeXFy8uDlNY_Fiji83pgOjpm4Up2kwDWPOnBUW7vq4ZMnGeNZZv4n2MBiVbtpR-bk0TtXyYw8AX9SveE-wmJ1NGE9_X8QsweJ53LNslF2uhzW0iq7bcNbCsOk-O3pZJT6zX0ab7-n7NMGoWYxy3RQghMTW2YnWXPMFxsoCxCJiXKRNUPVFzLhwMzxFVv1bwiSkza5bASIuFjxiLlG6cMQBkcGVBYiFuYBmA-Wiqb23NW0Sqtu1WEyMOTamxJEFxIibNinzz5hTNnv27GgTUn1xLwQkxW3GX0-r3Qdz3WytII8rzX0jHKsjIprvf__7XYyYH5OEAx64JEBlpn6w9FEUINJkrh2rMPI7ORZXW7r0eBcg5n_NmrXa8rXCeKwx_qtsjtcaW6RsbZw7d52JDt8Iy9_sYTFgK0Y254bZYpI-h2z77UdsobNBsychUissrnXGMJoA_TKSl3ZO5Wfqlh8WsLPpQNHWtvK5j7a8sD_Y586d6_cW_ydhuCde_epX-z1A2Tr11FPd74c__GHrL-8mHPeCTRWKPMCZg8n9ax1PHhdpTFiAyka3sgAxUdGm4UfrDWplmB8nn3yyJ54mT3YrQNycZD45BIRaB8u94pJIJCO0rUHiqy-m2k46z5av8PTNTuNetq6t76frsWaY75-5eYnXdB6rH7JC41iOCa1AZXIoztbN9qfHC1_4wlGnIXzUkGzpDPdPApTyMCpwaacoQByyarSnWVwxEgE66KDjC0boZGTG0My2cfN32R9j9RbjtD2sbD8Zo9O5w268Pvvsq13YS9nz3W4EqHytKj_RJ0Tf1uWHhx_3UvG-5AFN-bYR9JH7gQcwSxoXHfcr57FyJ67bcNYT7PGVJ6baYoNWtjYboe1HV856wVptQVY2HMsdZou9s2FLoQ3JshHYgljjB8fiWeNNTCzGj5G4GN6qcr7mDWv3tHMsnM-CY9Z7N-owKybiWLuI9YPKznqwAisxmgAF4rb1oX0jLGmWHUuNWE3LVyMsv1oIe5X9V75-UvE8bCcsB8LKhdihkhuPaQpX_Gb1RtZbsdnvwZap9ZUdWS4kxj679mCGZN6AOmjt7hHL5yyz__R4V7xpoKXd4wbnTZvWmYH5P2Zw3smOzfHBiDNt0CIG6nXreixcw4zrw2asXm1xrbKlTrb16-I6qjiVn_zlh6VuWEOKJWtYWJCNMkTZwdGRgk2I1UvtQTLq72XJnWTzxYbUTTjuM1ZNLE9MpfyTFm5rKqOS3bLDEqYICm68hYowPrM2D7PHWYqR8UGIEAsU4bgxq7jyDHaEzGokvg5OOyMahmMglh0zx5mRzvo5nRyvC2L9Et60QQ-P2Z587aOrrrpqq1OKryxJC7KlQMl43S4f_CFMmSi-zWM8pine8rfZg3w9JntJgAmJvYvZXa_96U0jtDWhzGfABKXHerMaJjq9_t3Xx5igRktYES40lr8m_T1JcxGbBQsWunitWbPavqu_GVXlJ3_5QXBsvWbv9eUBy8OL9bZY-peHYSqzPExZgrm4WS3I7wsqD92Go2On3SoWxfu5awHaXLL9i4FX7RzLgSJSDDC0ZpGvoczrZrh5GaS3BxOUzCUB4iZMjgujllS8KTlGmBQv-3R1p9fxmD3J5irZZKXNzhbNdys7y8Xy6iCEBnDpdTy82gcrfFrvOaXP9STrPDPjUXvywuJlrEXNBE-eHmO5tD4zC68hwAk8a10XHddJDQ0Rsmpt6xACMBHHwmsUFHraXvSiF3kULLG6Ba3XdluikpLhe4vYICjNhwK1nVtvXWu11AGPK4kSz6r-_pnm_z_zr7YgWfm6VH7KREK4vcrPIYcc4gsG0nvFEBRq-Waj9BVEU4vBTCU-xINafHHjnuD-6DYcCxdSLstu1P9vYjDKdWrDY_C06pSXZiznvM0CR_sQw64lYsbPpd5DZUJji13t6tbv9Dqct771rd4eJBx2EmwqGGgZiNjpVR4MfiQMm9UQfDAkxizygUU92VEwchEvrwrZzQY3nnDCCd7rRLs1pc_reDCaE44BkwbTbTHsWy3FX7XDav5Y7Hl9j41p8rd78CodW5HR4yvaobj24hsDUs8H9ideI0Q-Ug8CbWYc10latl6RGwN5ZUmyAdErN54r24CK4elt41rI74EHnmJbcyGyOXNWmv8K6_UassGm0XvCMDYzUJGt0cAWtMG-h21jH7vPRsv7xs3HmwMWt_gPWjy32iuRBu3_Luag-VvlZ-qWH2xAZs4YtTigDefwcmM11GgP_2imDr8Xiv8snTHc48nW2G04a0FYeWpEa_0Uo2vpBdpRqQaU1lL-6Ec_6lMvLFZ_MZlZ0a3sh2Cvs_HaD9U51n-2jPtbLlhzGVtQai5RS2LN5mTXMXEK2AioHtJUY30h4iYdmjDUYrDPoMBm0PIxKDSlvvSlL_lK_EzFwBEny7oyoI5F7mmSsGQp6zHbzet5Y8lV1pZm-gnTGVi8zMTCa1rUkFg8jacD00OwrZiABfLPMqwpv57YGB8s7E2ty3rXvEZnf7wv4UpTlGaoCaq_YSRd5xhRdX2IN2zwZIJVo7HBXqAYfM3nwUH-m3lmv-mx2mkwJja-2Wa7Y8KxbFiTlFroOqtJbrImc7CaGWN-1hr_5fZ9k40nGrB4VxpT1vz-sa35u96mgqyyZXapSXadPQ-o8tN8McJ41G6r8kMti_FtlHvG5XBP8oIJat-82YV7hje_kD4voLBeZg9jD3QPbw9cz3q34QiPvQkbKuP3iBc_xh-13Chpsp2xnmCpp4entd3kbjnnfCv8rqLWxrQn7B7-biBbV9lrAJaQh7XmQav_325sr2nYDRPtwv046krNhc2aJz6VgV4rahF05THFgLjYpyuf9w_heOEd4Tlmc6_8_WW8g4saDjUn_NkIQ-2EbnycNb8iY2joqidOwtA7wzu7qKGk84iD4yzHan9WtDVufbOBhx1rQFj_cfR48fI2WKX4GIpgRrjWddK9z7HJ1oBIj-5V4rf1s234Q_Tt-OPP8Pit2kuQrZw1lf04PWrJ8cSzQmrd7rOcITx4-aStsR25bsaN0MvXzqn8TN3yw__FEsTF8s0wDnvdVuuvNBOHtxTSGD5qMNSauGeLrttwZj7xlxfS_U8552WaqcxTA7IZQVgCxnc8XVmoPdlxsL0wORIltblPvmg7BlsMWLw2hw1jLpMV6cWixoL1nAma2FVod1KzYOImcTIyk5pBcignNhJqMKTFb-w6jM6k7cp7uoibVReZNnKm9VwVHavzY2BDxTmfNExIWkF4xQ-2GIzl9HyxbyLo4TDKcR41IWpzLLhPDeqd73yn1zCIBAOeCZaHZ8F57E7kjd4tjGzUdnCwofZErxzvPGMSXrvr9MA1fNC7gB2KpxR2reKGzYv99N3uGH4Yndlw1nz0nj5qhvyHbBgXmZyMX7dO5WfqlB9aIozcpwd3rM4PWjGUo_GWIu4mHHZU0i2nl8bad1uOtgpH8ye9NgcDMc0pmgE4bngMxRRaHGKCcfZMEwsb6OR-GGPTqzwo1IgMNyo3My81JNPMMbO3hPprZ4CBISw156je0ewiHW58uhmZbcucLBwAd7MmVtlRJXzTm97kVU2s-vRicfPhEBugki_iptmGY4b7RBxd-LwiiFeVEG_5OicSZ6dzaObQQ4ijKUrzGDFJ4sFvBDD5pW-Op2Od4r4t_FV-xqdad_nhgcy9OJ7D7NGN6yYcD6t2D6xJC5C9Prnja3PaZZ4aB7UD2pjJ2ajKtq_y4FU4iBFiQe2KLmduntvylTf8MXvvvXc40ew21BR4kWK7FyGmvFf57nSdVeIYLywi0uktlOOdm-O4yk_31G-P8tN9buoJ2XUTbLzk6PKmdlJs5ox3Tvk4zTFqREXHq5URHboGi4MBqW3RPKI2hKP2gnG7_JaIYlzl38RB1bBTFZPuwmJXefn8ie63u86JxnVHOU_lp_t_8o5UfmoToO7xKaQIiIAINAlU6oYXNBEQARGok4AEqE6aiksERKASAQlQJVwKLAIiUCcBCVCdNBWXCIhAJQISoEq4FFgERKBOAhKgOmkqLhEQgUoEJECVcCmwCIhAnQQkQHXSVFwiIAKVCEiAKuFSYBEQgToJSIDqpKm4REAEKhGQAFXCpcAiIAJ1EpAA1UlTcYmACFQiIAGqhEuBRUAE6iQgAaqTpuISARGoREACVAmXAouACNRJQAJUJ03FJQIiUImABKgSLgUWARGok4AEqE6aiksERKASAQlQJVwKLAIiUCcBCVCdNBWXCIhAJQISoEq4FFgERKBOAhKgOmkqLhEQgUoEJECVcCmwCIhAnQQkQHXSVFwiIAKVCEiAKuFSYBEQgToJSIDqpKm4REAEKhGQAFXCpcAiIAJ1EpAA1UlTcYmACFQiIAGqhEuBRUAE6iQgAaqTpuISARGoREACVAmXAouACNRJQAJUJ03FJQIiUImABKgSLgUWARGok4AEqE6aiksERKASAQlQJVwKLAIiUCcBCVCdNBWXCIhAJQISoEq4FFgERKBOAhKgOmkqLhEQgUoEJECVcCmwCIhAnQQkQHXSVFwiIAKVCEiAKuFSYBEQgToJSIDqpKm4REAEKhGQAFXCpcAiIAJ1EpAA1UlTcYmACFQiIAGqhEuBRUAE6iQgAaqTpuISARGoREACVAmXAouACNRJQAJUJ03FJQIiUImABKgSLgUWARGok4AEqE6aiksERKASAQlQJVwKLAIiUCcBCVCdNBWXCIhAJQISoEq4FFgERKBOAhKgOmkqLhEQgUoEJECVcCmwCIhAnQQkQHXSVFwiIAKVCEiAKuFSYBEQgToJSIDqpKm4REAEKhGQAFXCpcAiIAJ1EpAA1UlTcYmACFQiIAGqhEuBRUAE6iQgAaqTpuISARGoREACVAmXAouACNRJQAJUJ03FJQIiUImABKgSLgUWARGok4AEqE6aiksERKASAQlQJVwKLAIiUCcBCVCdNBWXCIhAJQISoEq4FFgERKBOAhKgOmkqLhEQgUoEJECVcCmwCIhAnQQkQHXSVFwiIAKVCEiAKuFSYBEQgToJSIDqpKm4REAEKhGQAFXCpcAiIAJ1EpAA1UlTcYmACFQiIAGqhEuBRUAE6iQgAaqTpuISARGoREACVAmXAouACNRJQAJUJ03FJQIiUImABKgSLgUWARGok4AEqE6aiksERKASAQlQJVwKLAIiUCcBCVCdNBWXCIhAJQISoEq4FFgERKBOAhKgOmkqLhEQgUoEJECVcCmwCIhAnQQkQHXSVFwiIAKVCEiAKuFSYBEQgToJSIDqpKm4REAEKhGQAFXCpcAiIAJ1EpAA1UlTcYmACFQiIAGqhEuBRUAE6iQgAaqTpuISARGoREACVAmXAouACNRJQAJUJ03FJQIiUImABKgSLgUWARGok4AEqE6aiksERKASAQlQJVwKLAIiUCcBCVCdNBWXCIhAJQISoEq4FFgERKBOAhKgOmkqLhEQgUoEJECVcCmwCIhAnQT-D913kN7RPfXEAAAAAElFTkSuQmCC" /><!-- --></p>
+<p>As you can see, ab-lines for the applicator/planter and harvester
+were generated for each of the input. We will show how to export
+ab-lines later.</p>
+</div>
+</div>
+<div id="assign-rates" class="section level1">
+<h1>Assign rates</h1>
+<p>Let’s now assign input rates to the experimental plots we just
+created. Before doing so, we need to prepare rate information for both
+inputs using <code>prep_rate()</code>. Here,
+<code>design_type = &quot;ls&quot;</code> (Latin Square) is used for both seed and
+nitrogen experiments (see <a href="https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html">this
+article</a> for other design options and <a href="https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html">this
+article</a> for changing rates manually.).</p>
+<div id="prepare-rate-information" class="section level2">
+<h2>Prepare rate information</h2>
+<p>You can use <code>prep_rate()</code> to prepare rate information
+before assigning rates to the experimental plots. For nitrogen, exact
+rates were specified through the <code>rates</code> option, and trial
+design type is specified to be “ls” (short for Latin Square). For seed,
+the minimum and maximum rates, and the number of rates were specified.
+In this case, the code interally finds the rates automatilly for
+you.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!===========================================================</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ! Assign rates</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !===========================================================</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>n_rate_info <span class="ot">&lt;-</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep_rate</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot_info =</span> n_plot_info,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">gc_rate =</span> <span class="dv">180</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">unit =</span> <span class="st">&quot;lb&quot;</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">rates =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">140</span>, <span class="dv">180</span>, <span class="dv">220</span>, <span class="dv">260</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">design_type =</span> <span class="st">&quot;ls&quot;</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">rank_seq_ws =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(n_rate_info)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 12</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ input_name          &lt;chr&gt; &quot;NH3&quot;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ design_type         &lt;chr&gt; &quot;ls&quot;</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ gc_rate             &lt;dbl&gt; 180</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ unit                &lt;chr&gt; &quot;lb&quot;</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ tgt_rate_original   &lt;list&gt; &lt;100, 140, 180, 220, 260&gt;</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ tgt_rate_equiv      &lt;list&gt; &lt;82.0, 114.8, 147.6, 180.4, 213.2&gt;</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ min_rate            &lt;lgl&gt; NA</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ max_rate            &lt;lgl&gt; NA</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ num_rates           &lt;int&gt; 5</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rank_seq_ws         &lt;list&gt; &lt;5, 4, 3, 2, 1&gt;</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rank_seq_as         &lt;list&gt; &lt;NULL&gt;</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rate_jump_threshold &lt;lgl&gt; NA</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>seed_rate_info <span class="ot">&lt;-</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep_rate</span>(</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot_info =</span> seed_plot_info,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">gc_rate =</span> <span class="dv">32000</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">unit =</span> <span class="st">&quot;seed&quot;</span>,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_rate =</span> <span class="dv">16000</span>,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_rate =</span> <span class="dv">40000</span>,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_rates =</span> <span class="dv">4</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">design_type =</span> <span class="st">&quot;ls&quot;</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(seed_rate_info)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 12</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ input_name          &lt;chr&gt; &quot;seed&quot;</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ design_type         &lt;chr&gt; &quot;ls&quot;</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ gc_rate             &lt;dbl&gt; 32000</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ unit                &lt;chr&gt; &quot;seed&quot;</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ tgt_rate_original   &lt;list&gt; &lt;16000, 24000, 32000, 40000&gt;</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ tgt_rate_equiv      &lt;list&gt; &lt;16000, 24000, 32000, 40000&gt;</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ min_rate            &lt;dbl&gt; 16000</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ max_rate            &lt;dbl&gt; 40000</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ num_rates           &lt;dbl&gt; 4</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rank_seq_ws         &lt;list&gt; &lt;NULL&gt;</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rank_seq_as         &lt;list&gt; &lt;NULL&gt;</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rate_jump_threshold &lt;lgl&gt; NA</span></span></code></pre></div>
+</div>
+<div id="assign-rates-1" class="section level2">
+<h2>Assign rates</h2>
+<p>We can now use <code>assign_rates()</code> to assign rates to
+experiment plots.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>trial_design <span class="ot">&lt;-</span> <span class="fu">assign_rates</span>(exp_data, <span class="at">rate_info =</span> <span class="fu">list</span>(n_rate_info, seed_rate_info))</span></code></pre></div>
+<p>Here is the visualization of the trial design done by
+<code>viz</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">viz</span>(trial_design, <span class="at">abline =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAYAAAAUg66AAAAEDmlDQ1BrQ0dDb2xvclNwYWNlR2VuZXJpY1JHQgAAOI2NVV1oHFUUPpu5syskzoPUpqaSDv41lLRsUtGE2uj-ZbNt3CyTbLRBkMns3Z1pJjPj_KRpKT4UQRDBqOCT4P9bwSchaqvtiy2itFCiBIMo-ND6R6HSFwnruTOzu5O4a73L3PnmnO9-595z7t4LkLgsW5beJQIsGq4t5dPis8fmxMQ6dMF90A190C0rjpUqlSYBG-PCv9rt7yDG3tf2t_f_Z-uuUEcBiN2F2Kw4yiLiZQD-FcWyXYAEQfvICddi-AnEO2ycIOISw7UAVxieD_Cyz5mRMohfRSwoqoz-xNuIB-cj9loEB3Pw2448NaitKSLLRck2q5pOI9O9g_t_tkXda8Tbg0-PszB9FN8DuPaXKnKW4YcQn1Xk3HSIry5ps8UQ_2W5aQnxIwBdu7yFcgrxPsRjVXu8HOh0qao30cArp9SZZxDfg3h1wTzKxu5E_LUxX5wKdX5SnAzmDx4A4OIqLbB69yMesE1pKojLjVdoNsfyiPi45hZmAn3uLWdpOtfQOaVmikEs7ovj8hFWpz7EV6mel0L9Xy23FMYlPYZenAx0yDB1_PX6dledmQjikjkXCxqMJS9WtfFCyH9XtSekEF-2dH-P4tzITduTygGfv58a5VCTH5PtXD7EFZiNyUDBhHnsFTBgE0SQIA9pfFtgo6cKGuhooeilaKH41eDs38Ip-f4At1Rq_sjr6NEwQqb_I_DQqsLvaFUjvAx-eWirddAJZnAj1DFJL0mSg_gcIpPkMBkhoyCSJ8lTZIxk0TpKDjXHliJzZPO50dR5ASNSnzeLvIvod0HG_mdkmOC0z8VKnzcQ2M_Yz2vKldduXjp9bleLu0ZWn7vWc-l0JGcaai10yNrUnXLP_8Jf59ewX-c3Wgz-B34Df-vbVrc16zTMVgp9um9bxEfzPU5kPqUtVWxhs6OiWTVW-gIfywB9uXi7CGcGW_zk98k_kmvJ95IfJn_j3uQ-4c5zn3Kfcd-AyF3gLnJfcl9xH3OfR2rUee80a-6vo7EK5mmXUdyfQlrYLTwoZIU9wsPCZEtP6BWGhAlhL3p2N6sTjRdduwbHsG9kq32sgBepc-xurLPW4T9URpYGJ3ym4-8zA05u44QjST8ZIoVtu3qE7fWmdn5LPdqvgcZz8Ww8BWJ8X3w0PhQ_wnCDGd-LvlHs8dRy6bLLDuKMaZ20tZrqisPJ5ONiCq8yKhYM5cCgKOu66Lsc0aYOtZdo5QCwezI4wm9J_v0X23mlZXOfBjj8Jzv3WrY5D-CsA9D7aMs2gGfjve8ArD6mePZSeCfEYt8CONWDw8FXTxrPqx_r9Vt4biXeANh8vV7_-_16ffMD1N8AuKD_A_8leAvFY9bLAAAAOGVYSWZNTQAqAAAACAABh2kABAAAAAEAAAAaAAAAAAACoAIABAAAAAEAAAEgoAMABAAAAAEAAAEgAAAAAKtAJY0AAEAASURBVHgB7Z0FnB3V9cdPNhtPIAmBEDS4Fyvyx61Q3KHFrbi7FmiBUtzdoRQpXghQnOBOocU1ASIE4p75n-9J7zBv9vm-zZM9Zz9vx67-ZubMuUfu7RApiZMj4Ag4AlVAoKkKdXqVjoAj4AgYAs6A_EFwBByBqiHgDKhq0HvFjoAj4AzInwFHwBGoGgLOgKoGvVfsCDgCzoD8GXAEHIGqIeAMqGrQe8WOgCPgDMifAUfAEagaAs6Aqga9V-wIOALOgPwZcAQcgaoh4AyoatB7xY6AI-AMyJ8BR8ARqBoCzoCqBr1X7Ag4As6A_BlwBByBqiHgDKhq0HvFjoAj4AzInwFHwBGoGgLOgKoGvVfsCDgCzoD8GXAEHIGqIeAMqGrQe8WOgCPgDMifAUfAEagaAs6Aqga9V-wIOALOgPwZcAQcgaoh4AyoatB7xY6AI-AMyJ8BR8ARqBoCzoCqBr1X7Ag4As6A_BlwBByBqiHgDKhq0HvFjoAj4AzInwFHwBGoGgLOgKoGvVfsCDgCzoD8GXAEHIGqIeAMqGrQe8WOgCPgDMifAUfAEagaAs6Aqga9V-wIOALOgPwZcAQcgaoh4AyoatB7xY6AI-AMyJ8BR8ARqBoCzoCqBr1X7Ag4As6A_BlwBByBqiHgDKhq0HvFjoAj4AzInwFHwBGoGgLOgKoGvVfsCDgCzoD8GXAEHIGqIeAMqGrQe8WOgCPgDMifAUfAEagaAs6Aqga9V-wIOALOgPwZcAQcgaoh4AyoatB7xY6AI-AMyJ8BR8ARqBoCzoCqBr1X7Ag4As6A_BlwBByBqiHQcZ555jljypQpMv_88-dsxGuvvSaXXnqpbLzxxlnTPPnkk_L3v_9dVl11VWlubs5I88gjj8gbb7whv_rVrzLOh4Mrr7xSBg0aJM8__3yL39dffy0rrLBCSFr2dvr06fLnP_9ZFlxwQenTp0_Z5ZDx7bfftr7-3__9X6vKSWYeM2aMdOnSJXmqxT4YvfPOO7LMMsvI7bffLj_88IMsuuii8t5778kdd9wha6yxRos8yRPPPPOMPPTQQ7L66qsnT5e8f91110mh56XkQj1D-0Xgs88-i_ThjWbMmBHlovvvvz9aaaWVcl2OjjnmmEgRjI499tgWafbdd99ok002aXE-nFhqqaWiBRZYINpggw1a_I466qiQrFXbyZMnR8oYo6effrpV5ZBZX8Bo3nnnbXU5oYBHH300UmYWDrNuaf-KK64YDR8-3K7_5je_iY488kjbv-WWW6I555wza77kyb333ju66qqrkqfK2i_meSmrYM_ULhFoXmSRRYTf3XffLb_73e_K5sSdOnWSiy66SLbbbjspVTrYcccd5YILLii77kIZO3fuLFOnTi2UrCrXP_jgAxk_fnzeupVxyEYbbSTKaPKmy3fxiSeekNNOOy1fkqKuVep5KaoyT9TwCJgO6Pe__72cfPLJJlqX22OVkEQlHdEvrUycOLHcYnLm-_LLL62Nm222mfzlL3-x4dpf__pXS099f_jDH-Tzzz-P8w8ZMsTO_fzzzzJt2jTb_-ijj-TVV1-VQw45RBiWJUklCnn55Zft1BdffCEc__a3vzWGev755-fF5rbbbpOddtpJttpqK7n44outPgqC6dEuyjvxxBMNn0MPPVS-__57q4dh53333SehrT_99JOdT_6j_WeddZZwj_IRZdEGmPm9996bkfT999-XHj16yEILLWTnVaKS8847z9Jyzw4__HBhuJskhnm777677LHHHtZGMAxUiecllOXb9o2AMSC-rsOGDTNdTWvguP766003UeqXlhcVKSD9Cw_9jz_-aBLAK6-8YlIaX_Odd95ZHn74YWsuOokbbrjB-hDaTx7OTZgwQXR4aftDhw41aY926nAsJJWXXnpJ0EXxdYfRoa8aNWqUvYCLLbaY6Y9OPfXUOH1y54gjjhAdggrp0MPwYu-www6WBCZHG2Ca4AuDot6gS5trrrlkvvnmk-7du5v-DEktTehuuK5DsPSl-BjGBR7LL7-8SUkwjssvvzy-_vjjjxszDSdgOnfddZdsuOGGsummmwp16BDYcCLN6aefbkxpwIAB8utf_1oOO-wwwyfkr9TzEsrzbTtGIAw8l1566ejaa68NhxnbYnRAq622muW56aaboqampkhfajsuRgek8JsOKb1V5aqVoS9E1Lt370gZUtwu9EboriCVEix_qJNz7777rp1TphOhQ6Hsp556ikuRDhMjfUltn38HHHBAtOWWW9qxKnujffbZJ1LmEV9Hf7L22mvbcVIH9PHHH1tf77zzzjjtp59-anU999xzkUpmtq8MOb7-r3_9y8599913dk6luEgZXnw9vXPmmWeabix5Pq0Dom-0OxA6uTnmmCPGC_3aP__5T7s8cuTISKWk6D__-U9IHj322GPWJlVsR7SL8lSiiq-rRBXtsssuGXrCfM9LnNF3HIECCMQmK6xgH374oT57rSOGYP_4xz9sKKZMoKjC-GIjRaRJmYydwvK03nrrSceOHeMkSBH6EsXHpezQRoYRSEeUec8998iNN95oRTDsoi6kgv_-979WhzIumXvuuVtU8eabb4ria5Ij1qhAPXv2FK4pU7ZTWAcDhT4V0vuE9NyTfBZK0iEh0eZAyqDkwgsvtGFV__79rX3rr7--XVbGZP3l3qgCW5SJygsvvGDXGMqCKRY5ZbihOJPoglQXTlbqeQnl-bZ9IhAzoK5du8rYsWMrggKm2mWXXVZOOeWUospjKMLwIRehB1liiSUyLjNcSjMgmEGgfEpnmAxMArM0wx6Y0BZbbGFZ0ZcwROE8L-Gaa64p48aNsxc1lB22tAu3A17YDh06hNM2ZMFcHgj9SyCVDm032dZwLduWe6LSX7ZL8bl-_foJ9y8QeELoemCkMEKYFDRp0iTZZpttTN_FkJH-7brrrrH-i6Fit27dMvpjGVP_Kvm8pIr2w3aEQMyAPvnkEznooIMq0nU1U8sll1wiOpQxvxX1NWpVuYsvvrjo0CWjDF6sQEF3AqMI9NVXX4XdFluYBspVLH_s77bbboIVDzrjjDNkySWXFKSeIHENHjy4hdKatPjhwOh0-Bb74aD3ufXWW4U2F0NJxpUtPbqfoBzPdp1z33zzjaAHCj5OYEXbUTpfccUVxlBD3gcffND0UCjGg2TFOQhdGYwdxqomfwmMDP8j9ELojQIjq-TzEtrm2_aHgH2OUfaqf4dgyaoU7bnnnqbg_Pe__12wSKxAL774YosfLz6E5ejbb78VrFEMmxjihWED1_lio8xlGIXEwMuF5SgfMQzDgVL1H7LXXnvFSRlqoYBmOIKUgpREfUgTaWJYg2T2xz_-0YavSBcwsBNOOEFmm222dPKsx3379jWrGC90ULonE3JPsN4VIhwtYYYo6sFhv_32M6kIhT0SXyD6B5NE0oGwfgVJlfYjFal-Rw488EDDccSIEWa-xwUgMJ-2eF5C-3zbzhDQlyxSX5RIv5iRShActqBSlNDJzCiAUR7rkCZ5OmMfR0SFPOtPpYM4rXpaW1kq7UT65Y7UshQroUmkHteRvszWD5UEIjUjW5nZlNChUPUKNge_cMwWJTIKZ33ZrDy1FEXqBR7pkCMaPXp0C0dEZQ7mSEhbdahl-0EhHJTQKq3FVQQltTIcO8dWmYK1VZlHnC7sqFXOrikjCKeitBJamWCkOi1rM-1Qc3yk3tXWl2xOkxgGlEFavWCpko1hG5T-qvuK1PplWM4---yR-odF-pGI6y_0vMQJfccRKIAAX_lIzayRSgE5kxZiQDkzVvgClikdbpg1Rr_aGQyIqsJ1tq0lrEW8xMUSljjylEs6hMqZVSWY6Oyzz855PVxQ1wOzCIZjGKZKg-EwY4tlEOacj-iPSpQtkhR6Xlpk8BOOQA4EhC-rjvXN_JojTVQrDCjZvmwMKHm9kfYxmSPJIFFVglQ_FqnXeoR7wXHHHRfhRpB0cchXRzHPS6786psUaVxhrst2HpcA1c3lTdNWF3FD0CF0BtPVIb9Jl639qKkqIlJv_7Zqet2W24TDGp6wOJ3VE2FZCkrXemp3OW3VYap5ZN98883lZM_Ig64NvRLBxehycHFAB4aeiKDYQtSa54W8eKLnIhxK0UcFl4Fc6drqPAG-6PCSxgz15zLn2mC9LLdurMIo-3UIXm4RjZkP0b_Q10-Vk5EqZuuWyzZCw_XlNB1Ua_ui_lMtdHLofHAezeWImqyzmOclmT65r5ZB06clzyX3NYzFJLLkuVm5H5xXNVQmrlY_ztG5554bH7dmRz33o2233bY1RTRc3uZCPiawXfxcCk0X0ZjsuXZ6hZtAcBVoTauweoVQkFAObgeY69POlsS4qQe1-Q4hlRCSkXxesl3HrSEQVkZcHZCssMrlI0z_WC6T7hacw_LJdC5IuzhYqgI99lGiXEJfcPrESockR3hJoELXkbjwWaNOXEWCL1jIzxYrIn0IxPQyDzzwgFkPcTfBoZVwlkC0lalpsCrTXuLzcAaFkDKxDhP6g_-Vk8hMrzhHot0ggP_TNddcYz5auBiootr6jg8YsWqB8sW4kabQdeLPKE8_2RZPhk9YOuA11MUWvy7M_MmYN_yznn32WdEwEFlllVVE9VWi0ohlw5N85ZVXtrmktt56a_Pn2nzzzW2uJBIUuk4agpJhergewIxwyEwSvmQwsTCXFfGCtGXhhRc2RoJLCHF-MB2IebNggLiBqKQjqjuV7bffPi6SDwjMKh0sHCdojzsNJ9N5hwoicPXVV0caPGvmfdwvmI9ImVGcr1CMW6HrFIRrAHFsgbDGqXSUcwiWLeYNdwpllqEIc7VQPYodn3POOeb2gPUxEOdU2jAraaHrGjoT4bKgoS4he6ThK4ZJGIKBk0os8XX198oYpqrflbkvXHbZZZZmrbXWipSpxelR2KvkGDHEDURcowbzhsN2v_1FXm6P3Led9hknQ35E_hOdj4cz4RkophlmFYpxw2Chb07OGDgi6FG2EmEfCK_sfN7h2WLeGK4cfPDBJtUgaSDphBCX119_3YaMTM0SSN0KzMESx9ZC14mFY2iE02UghkjJmESkuOQcWcokzWkUyQbnUOL_cFjFgRM8KFMn5QvFCSEySY99LhALqLq2OE173_EhWDt6Angxma-I4QYEU0A3Q9gJDAkGBKF7QZeD3g_rT_jBnGAAha7jjU5YB1a2JOXTYZEnrWekrQwT8TZXKcPiC5lXCSL0hCFbaBtbQktOOukkO1foOn2gjTCOQEn9FV7lWMDQ4wQivAjMYHqEqhCgG8JVGPJhPUvG_YV8yS19TFrZktfa5X67lwHbEQBM6aovqvl1pbvN8GPgwIF2WhWvNhRJTm-CpVRDPCKd9C0qdJ1C8O5WZhBXQ90MefAqz0Y6IV6kEf3xJX2hI6Z2IR-EH46ayCNlYuYPhTc3XtxJ_xymi9U4PJt-pdB1dUewPqobQlwnU9YqE4gYginziXQWg_ga_kB44YfhFhfARBlKbCXDn06V-XEe2qY6ICsrnGQYx1DNaSYCfAGc2hEChGkQMgIj0Mh_C9eAsRDGwssBYfJHh0MYCmEXOEDqhGyRDiki9BqFrlOGSiqRLgIQqRLZXDhUyW0vdy4GpPF2xrTIC6l0YuEgzM2E6Z8wIfQrgUnqEMsYGm3GRYR5jJiTirmOoELX6ZNKc5EOPSONM4zQCekCCDEDov3JeZzosw49IxgljAUGqcNDSw9jhHCOpX0waDzNVWIynRRpA4G_KvDDYbvfOgNqZ48AX-3jjz_ePKv52vPjxUJpm6R8MW6kK3Sdl1SHdxafhpTAhG_qAJlTAsoW86ZOi9G6665rZSB9wBTfeuutuJl4cCN1UD6xbUw0hzdzoELXqRMph_z8YC5BAoIZJSVAyiS-UC1gNtlbr169DEfi5FQ3ZVUiJe2___4WQ0fsIBPm4dmdJGIf1X0heapd71u0p4Lu1A4RQE-CAjWfFzxmenQ5TGSWjQpdp3x0HihkCxEmauZgYn7yJJEfZW-uSflRPnMtTMuSzMt-oesq1YkylIw5lVgsAAU1uqU0oUvDZyqpM0qmYeYEdEzB_ydcY3YH5uxm5gPqcxJxBuRPQc0gwAyUKH1x4ktOsFYzDWxlQ3B0ZNUYfKKcZiLQkr07Mo5AlRCoZMxblbqQs1okKlVum7d2zkTt8IJLQO3wptdylzF_M9wqdkK3Wu5Lsm30CbN_ITN9Mk972O_AVA98edJElDRE5DTj-LRDVbiWjh_iPBHPiNHEHAU_Cc47OQKOgCOQRKAZj9E0A9KJqIS4GrxQYUA4WalbepwPJRsBfCyGl2ZAOIrhwMXaUSgTb9GVF5IesXEhvuMIOALtHoGsoRis5plkLFhAiAIOxJzHXF9nnXXCKdvi2k_kMC7pOpWnBeYRoOcMKAMmP3AEHIH_IdCs3qkZYLCSJ-ZDVvrMRgyviOaFyaSJuCKmGcBMyaqlrBZRrcml0m3zY0fAEag9BJrVCypuFXobphzAX4HAu2zEeaZiyKYkxN-CtbqYs4WhG0MwlkEmyM-p-ggw5w9TcbQF8WFirTUnR6AUBOIhGM5mRB-j68mlqWf9KSZTIno6G6n3q01fyRI6rEuFUxkMzRlQNrRm_TmW4tFYLtlp15lr11eiBV989qUMfv6lrOumVaJ8L6OxEYgZEJILCukwWx6KZoZnGmMTK6CZAY8Z3tDvZCNmiGMqBpgPxORSRx55ZLakfq5KCPTs1VPOv2LmpF6VaMK9d95nDKgSZXkZ7Q-B2BGRWd_wwWAGOH4Ms5ggPGn9Yua39FSSWMiYGwXCcgYTQ1KCUEin09sF_-cIOAKOgCIQS0DFoIGrvEZFZyRlJU6mzmRFAVYnZQ5fnW7A5g5m_pdHH300I70fOAKOgCMQEGgTT2h0QQTj5QpgDJX7dtYioNNLyDXXXiMfftPSglluSxiCHbrvEXa_cw3Nyy3b8zU-AvEQrJJdRQfkzKeSiHpZjkBjItAmDKgxofJeVQIBpu9IOrWGMjHj69r0NtVpOMeWAE7Oh9Cg5DXO_e1vf7M0yfOEDlEHw_8w_WzyenofyyBL6RRDtBPdJtECSaKeQYMGCQs_Jl1bSJOrD_namStPss5G2HcG1Ah3sU76wDI2TPKenpSd8B2spRgzsKKGuENCenRiMGM-GDiSBhHmpz7ggAMs7AefM12pw1DAKIJBRWdYtLmbyZdmCGm4MJoUo6tkviJdXtmW31l99dUt3pGyWG5o0UUXtTLweyO0ieBTKFcf8rUzVx4rsNH-tevp2NpZ521a1Tn7RcMmDqnY74obL7VZBFXnlxdN1kbXlzTSFzdSphCnZbkepjEN-ZX5RDrpu11fbrnlohdeeMH29SWPdNKxSKWGiABqNXjE80EznzVTt0J_-tOfImVOts8_6lPJJD7OtkOduiZYtkvxOZbv0ZCi-JjZHqkLOuqoo2y-6nCRaVc1osAOc_UhXztz5QnlN9LWJaBG-6LUaH9Y9UInjM9YtoamJsN3dMpT8x1DIsIxlqV9sKhCLGeD9z3e-srM7HyYrZBwH4ZGEEvlJMN_ktcsQZn_mB2RtkIMv5QxxkHcrJLBahyBuM4sjvn6kKud-fKE8htp6wyoke5mDfdFFz-0FUjTTUyG7-DSoV9_YT0uvOmxqiVjFTFs4M3NiqXJKV51Qn1zA6FsriUNIMlr6brLOUbnBDMkXpJYR0jnk46ng73nnnuMSe6ly0QX6kO2dubLU057az2PM6Bav0MN3r4QvkOIjy6LY2u9E77DfMtIA0nCUZYwofQ1zoc4NHzPkvmS15JllbvP8s0wQRZZ3H333TOKQf-D9MZ68jDPdDtJHPqQq5358mRU1iAHzoAa5EbWazeyhe_gTc90L3jkYykKhLMrCwOSh_1A7KseyQ7nmWeeFtfI01pCMgmWOCaU12WG4iEZZTMMYyFFFMhLLrmkVZevD7namS9Pa_tQi_mdAdXiXWlHbcoVvoOEQBDzddddZ2jomvA27GGGTSauZ7iGjgiJgilkNtlkE0vHEtPomrC4EceIdSupEyoXWnRYW221lZVLGVjZll9-eSuOSfcwzSPFMTwLlK8PudqZL08ot5G2JYViNFLHvS-1gUC-8J3zzjtPWEmCIRnOrehfIPQ6Z599tpns0cVg9j7uuOPsGmZ-5qJiiESeo48-OmP9d0tUxj-U0Iceeqjo4oc2tGKJal3Q0UrShQkt_jGplyItS13n6kO-dubKU0azaz5Lm4Ri1Hyv22kDazkUI1_4Dlal5Msdbh_Of_jbZAsBIRQIvRA6lUKkq7caM8HhsRAxsTzSVdA5FUofrufqQ7525soTymyEbeG70wi99D7UPAL5wneyMR86xEKEuRYj7N27d5v0GdN_qcyHhuTqQ7525srTJh2rUqGuA6oS8F5t7SCwyCKLyM4771w7DWpHLWlmio30qhj0P2j8fVmedvQ0tNOuojhOKo_bKQxV6bYvy1MV2L1SR8ARAIGsOiBflqdxH44xo8fI3r_7Q8U6OPTboRUrywtqfwj4sjzt6J4vvPDCFg4xYfTMSO1KdL3PbH1lvfXWK8raVIn6vIzGQsCX5Wms-5m3N5itx40flzdNORc7SIeCU16UU67naXwE4iEY8TO-LE9j33AWjHzv_fdkjc1WrVhHh30zXD5661NflqdiiLavgmIG5MvytI8b36Nndzn84oMq1tnnHxhsDKhiBXpB7QqB2A_Il-VpV_fdO-sI1AQCsQRUTGt8WZ5iUPI0joAjUCwCzeh9shEBcWn65JNP0qdko402ypj-gDlSdtllF1-WpwVSfsIRcATSCMRDsPSF1hzni-tpTbme1xFwBBoLgTZhQI0FkfemUgiMGDFC7rrrLps2NVuZRIYzz06S8i1P48vyJJGqz31nQPV53-qu1SzFg8PiBx98YEP0ww8_vEUfDj74YNHVIuLz-Zan8WV5YpjqescZUF3fvvpoPHP9MGXpvffeK2eddZY8-eSTthAgElEgJhtjXbAkwaSQiC666CJbi-v000-XyZMnC8YQZkh87bXXhHmYmYws6CxJy0yKzIo4ePBgW52COZpbS7ip4MgZ2sMsi2ExQyYe23fffeWKK66Q2267zWZKvPPOO63KXH3I185ceVrbh1rM7wyoFu9Kg7UJneD7778fz0zIonyskMp0qhALA55__vn2C13PtzyNL8sTUKr_rTOg-r-HddED1vSCmFHwiCOOkD322EOYmJ3jvXQJm8suu8zW_Qqdybc8DUvvJCfrSi6948vyBATrY-sMqD7uU0O0khUudtxxRxvKMM8zhOTDcszrrLNORh_zLU-TvpZceifXcjcZhbfiwJflaQV4WbI6A8oCip-qPAKsKoFupk-fPqYLYjE_iBUlWPMdCQm9ii6BLAMGDPBlebIsR1T5u1L9Ep0BVf8etIsWsArEyiuvbEvooBMKhEIZ5sQaYEwOz2oTmN7zLU_jy_IE9Op_W1IoRv1313tQDQTeeOMNeeyxx2TQoEFyySWXxE14_vnn47Xf45OJnVzL0_iyPAmQ6nzXl-Wp8xtYSvNZlueKqy-XG9-aqX8pJW-utETDX3bUNRZ6k215nFz5Sjmfa3kaX5anFBRrM61LQLV5X7xVCQSSFq_EaV-WJwlGne67DqhOb5w3u3II-LI8lcOy1JJ8WZ5SEfP0DYeAL8tTvVvqy_JUD3uv2RFo9whk1QH5sjyN-1yMHzdBLj3y6op1cPi3wytWlhfU_hDwZXna0T2fb775ZPlfLS8Thk6uWK97Ns0uq6yyiiR9eypWuBfU8Ag0RVEUd_Kzzz4TXOQvvPDC-Fx658wzz7RYnhDbk7w-dOhQIWqYyOBXXnlFlltuOXn88ceTSXy_igjg3Ne9e_c2-XXo0KGKPfOq6xWBeAjmy_LU6y0svt1ffvmlvPTySzL_avMXn6lAynHDx8nIT0YKz4-TI1AqAjED8mV5SoWuPtN37dlVNjp9w4o1_tOnPpPn__p8xcrzgtoXAjEDCsvyhO4ff_zx0qtXL8F7NhAu9dtss004tC1zuzB1wpJLLimbb765MGkU87tg2rz77rtlzTXXzEjvB22PAENppivt1q2bSSZIJ0SMMycP0184OQK1gkDMgIppkC_LUwxK1U9z1dVXyZtj35Rus3UT0bjPDrib6u-zUZ9JpH9OjkCtINAmsWBMwckE43PMMUet9LNdtePc88-V56Y-K2_c-KaM-mJURt879-wsezywe8a51hyEIRj3u61iwVrTPs9b2wiUJAEV2xVflqdYpNom3cQpE-WJU59sm8K9VEegggh4LFgFwayZolTNs8YBa8jAZRaU2ebpLUuvvKQMWG5e6T9Pf6mmuXzIkCFy--2326RjaazQTzHhOzrFJPmyPG8n4Wi4fWdADXdLRaZMmyId9K-pSW9vUwdzEuyg2yb9VYtuvPFG2WyzzeTTTz-VHXbYQW666aa4KZtssomcdNJJ8uabb9qKEqyaAfmyPG-bYYcZIxuVnAE14J2dOl1Xm5jxP2WzSkPT1fIVVdH4hbMry-5gFWXdLyagv_jiiw15HFZxYH300Ufl3HPPtV9whM21PI0vy9M4D60zoMa5l3FPMLvj4B4p18HsPmniJJsIfurU6jgLMux75plnZKmllrJ2PPLII_ESPauttpqt7xUaz-RjDMPoA9LSWmutZZdw68D7HhcDX5YnoFX_2zZRQtc_LPXdg2nTp8lP34yScSMnyIyJU2X4tyNkWsfpEk1VSahD9czwo0aNMn8xGAw-ZRDDxB49etg-OqJzzjlHrrvuOvMtw6qW1FlhVR02bJgt7ZycpKzQsjwwrUoRkhzB2qzkseWWW1qxYYJ9Du655x5jkiw1VGhpoaSVmD7Qznx5mC-70cgloEa7o9ofGNDsc_eWfgP6yVzzzSkLDFxA5l1oHundt7fphqrVZV4yGAiKaCSfpMIZT3yW5sGRldUz0kvv0GacKWFW6Wu-LE-17mjr63UG1HoMa64EGJCNwZTdqBuiDcMidEJVEn5YTjkEJSPRbLfddjLnnHPKq6--atghDbHSxQUXXGCBzJyce-65baUM1hIL9MMPP8hCCy0k8847r7AfiP2BAwfaIYsdpq-Rp7WEZIJ3OUSEwEEHHSRPP_10XCxLT6PXQnFOVACUrw-52pkvT1xZA-04A2qgmxm6Mm3aVImmRzp8UUdotXzNUF0QrKha1LlzZznhhBNsTXja8NZbb9nSO7yo3333nWyxxRbCWuowpkC-LM91BsWDDz4o_fv3l7nmmitA01Bb1wE11O2c2Zlp6ok-fdoMmTxpikyeOkWaVKE7rXmaTNHjahBSz-WXXy4nnniinHzyyTYdCBYxJBliDocPHy4bbLBB3DReOBiTL8tzpblQoHdqVGqTUIxGBate-vX7_X8nr7z7ioz6-ifpHHWSMePHSpeOnWXC5EnSqUuz7H7_bhXrSqmhGKNHjy45ZMOX5anY7aq5glwCqrlb0voGIQH1mb-vdOnQVTpO6SidJnSSfj36yVdDv5GpVZKCQq_KiRdLWrxCOWwZ2vHLRr179852utXnsNr17Nmz5HJy9SFfO3PlKbnyGs7gOqAavjnlNm26KqFROqP3mal3Vj2Q6oSqpYQutx-zKp8vyzOrkG5Zjy_L0xKTuj-DBBRNnyFNHfX7ovoXwjBmzgNUJTNYjSPqy_JU7wb5sjzVw77Nap4-Y7pMmzJNxo8eLx1nNMvkiZNlQtMEmarnXApqM9i94DIQyKoD8mV5ykCyhrIwBBs9fIyMHDpKnfaaZKIyoNFTR6trkEpAOi4bfMngirV29JAxFSvLC2p_CPiyPA14zwk-7TVHL-nZNJtMlykyZvRE5TvTZNzPE2T6xGny5bNfWYgDwzKUqhaeocGqzJbIOczm_JjXicnlmvRPo8o0sL5JOk3qJ1OamqVzzx9l3gHzyuz612eZPr4sTwM-R7OiS74sz6xAeRbXwRAMPyC8ocM0HGwRf5o7NZtuqFOzbpX5NDd1lOaOzdJRjzuqzkgn7bA8HfQazoAwIX4wH0Iguk3vr8O6uc2XZ-GBCwu_gQsOtLJmcTe9ugZAIB6CEX285557CnOPhODAdP-YbP6ll16Su-66K33Jjvla4gaP2zoP7dprr23rjBHb4zTrEOA-YAWDaeADjTQTRSoDTZkqk8dNlm4De6k8BDvqrBJSkpQZJQ51Ug-lTloGaVUa0u3YOT7lpDDwevajwTJt3FSZOnyixWnZBf_nCJSAQPy8-bI8JaBW40kZRk1VZjNFmc2USBXQum3SKPgpk6dKU-cm6f_7JSrWg3H_HikjH_6yYuV5Qe0LgdgPKCzLM2bMGAsCPOKII-SUU04xiShAQtBgepkdIpo_-ugjS8KyPK-__roty8MJX5YnIDdrtwzBYD4jvh8uI7__SaJJukjA8LESTc6Ud2Ztq7w2R6AlArEE1PJSyzO-LE9LTGrxDEOwnrP3lOYFm2W2Hr1l6rRJ0nXUWJn883gZN3FiLTbZ29ROEWiTWDBeAF-Wp3pP1Kqbriqjfh4lk8ZNkt49-sq0GZPkp5_Gy6RR45QBjZcFjl6pYo0LQzBflqdikLarguIhWCV7jQI6OdtbJcv2svIjMGWKRr83q-JZk4Xwi0iV0Fi8VCft5AjUFAL-SNbU7Wh9Y5j8C5P7-DETZOLYCfLTyFHy_WffyYghw8wzuhY8oVl-B4kpSUz2xbQTLMOTJF-Wx5flST4Pvl_jCDA9KR7PkydMlp-H_iyjf_xJ-s7VTye1mkO66lrx1aYHHnhAdtxxx4xZCw877DA54IAD5DmdTXCllVaSjz_-2JrJ8QorrGAzEWLgSC5PkysPRhEMKjA5Zikkn3mA5-k47iWsylGINt10U5u18bXXXpPVV1_d5nAmz9dffy2LLrqolXH99dfb5PsT_6dry9WHfO3MladQ--rxuktA9XjX8rQZBtSxc7P0n7e_9Jq3twxYdG7poQrpnuoZ3bmrTl2hw7FqEdLMmWeeadOxhjbkW2LHl-W5yFYMYZ5sJNtGJGdADXZXYUDoeppgNBr6NUOloRlqlkcrNFMzVJ0OI4Xss88-JkEkHV1zLbHjy_KsZTcquRxRde5c29bqDKht8Z3lpfPiWtiFeT8r89F5gCy-iztdPeHHpmRdfPHFZaONNsrA5KuvvpLkxFthiZ18y9PkykPBXEsaQEJ5GZW24gA9FUyBaWOTy_KEidFasyxPiCLItRxRK5pds1mdAdXsrSmvYUhAU9Xj-Yfvf5Dxw8bIkE-Gyo9DRsqwr0fIuLHjLD6svJLLz_Xhhx_KLbfcYquepkvJtcRO-jz56Jsvy5NGsL6PnQHV9_1r0XrM8M3dOkm3nt1U-dzX9rvO3kX69OtrYRjVEIPwiEfXg9TA6qYobVnYjzXgcy2xk295mlx5ACPXcjctgCrxhC_LUyJgRSZ3BlQkUPWSbOYQTKRL9y7Sd47e0ty9k8zeZ3bp2qubdOmCEnrW94T14LEKhTCfBRdcUN58803ZeOONbT0w1odnGWYknBtuuEE22WQTi8QniJlVUqHk8jSsIZYtD-m22WYbufXWW2XChAm2sgbWrfXXX59LraKxY8fKVlttZeVSEFa25Zdf3spEuoPJEqjN8CxQvqWFcrUzX55QbiNtSwrFaKSON2pfeImlo6qbVQeEMlp1vxoZr0syq29QNZXQufBGR3P22WebRISExPrxxx13nCX3ZXl8WZ5cz42fr1EEWG30-GuOk-8__0Gax3WUb0d8LwsMGCDTlRuN-PZ7GT16nIZirFix1v846CsZ-_YI2UvXQg-K2GyF77bbbjY9S7ZrOCFeddVVgm9PkCqS6XIty8M6YwzVjjzyyGRy28fRkdUr0CWliVChgw8-WDbbbDPZeuut5dlnn5Ubb7xR7rjjjnTSFsco9JGucq2MgZsBTJW-JClXH_K1M1eeZLnJfdZcQ7rEpwplPH5QO-ywg0mZyXTl7qfbk6uvpZTf8u6UktvT1hwCSEAT1At6xDcjZMZYjYqfNFm-m_SDdOnWRcbpHNEmElWw1dPGzlzsEH0O4R7jxo0zL2dW8kwypHXXXTdnrV988YUxAKYCzkZJK1nyOsOelVdeOSsDyrfcDUyEoR3LQ8OASiH6mIv5UM69994r888_fwsGlKsP-dqZK0-29r7wwguCEyRDWWjEiBHWx8UWW6wiDOjhhx-2ZbMpN1CuvobrxWydARWDUh2lQQfUfY4e0m227tJFZzQcN2GcdO_WQ6RrJJ3Hd5GJibXWK9GtHkv1lYmfjhbmk8J8fOmllxpDwON5jTXWKKoKdDrvvfee8LJUgyq5LM_9999v-qtZ2Q8Y6oEHHihHH3205GNorWkT3tnp8JlK9NWX5WnNXanBvEhA6H86q8QzW9eeMqM5ktm66wyInXRO6M7jK86ASoGA8AO-oAwTMM3z4hA2geIV6xhBzEnC-5cvOlYzLF_4EXXv3j2ZpOj9n376ydakp74-ffpk5AvL8jA0IwyE0AzWrR84cGBGunBAms8--8wsbqTrlghxQTpK94N8rAjLfFpLLLGESUgsPd2lS5fYZ2no0KHWN9pG_VgNSZurDaEtbB955BGbk4sZTculfFizdDYGBIihHR8a2pnuazl9aGICsTQx1iOGJsTH8OAQhxN-l1xyiV3_5JNP0llt_W_G5ExShqn1mWeeaZHGT7QdAkhA0qSaZ6gDymjdMqequkV3QCtdRcKStdBCC9lztNxyy5m-hzXjH3vsMTv_zjvvxK277bbbTL9DOqxPK664ojGuQYMGxWmK2QGP7bff3oZbWNVQdGOVSxN6qGWXXVaWWWYZ2WKLLaw9xH4NGzYsToruB2kNpsPQjbi1Aapfw_kwEJY99GGB-CBQP8Mp6ofZoX-inBNOOCEks-NTTz1VtttuO-snacEK3Znd0zhly50rrrjCJgrEBaEcKoT1_vvvb0Nk2kGbzj33XKsm3Vf6VGofsj6RuZblgdPy42HYfffdZZ111sno75dffmnmyCeeeELOOussM4dmY3AZmfygogiYBMQE9PAgnYYVDjQzHGNmNdHU6TLqX99U7Df-gx9Lbj-xTSidGa7xwqWJ8Ay-5jCAzz__XDCBP_TQQxZUesghh6ST5z0-5phj5PHHHzcmMUmHn5j_77zzzow8o0aNMpcAdFbUg8sAOhXaseuuu8ZpL7jgAmEoAhPko8wHGAZJiAm6r2x01FFHCe8D86hTP0PN559_3oas6fTopZAKqXvIkCGGAZ7XtCkf0ae0h3m-9MlrxWB9--232xAPhT7CCfcvF5XcB_WZ0DCdX0gVWZFq0SM1hUb6pfjlwv_21P8iUi4YqUjZ4hp59YZFH3zwQaRcNVKxt0UaP9G2CKh_SrTCdstHsw2YLerbv2-kzohRjz7doz79e0ddenaJOjQ3RU3669Cxg22bOjVFHTt1nLnP-f9d53yH5g52rGb9X9Lo-U7dO0X95uwXzb_g_PYbuNDASEV065hKx7C-SH1iWnRUrUx2TT9OGddUmWnn1YJn559--ulo7733jnS4lpFu3333tXTKZO28Dk8ilS4y0iQPlHHpVEgdomOPPTZ5OlLJ3srRKYftvH617VgZRUa60BdlGHZeJZtIJZmMdulwLFIJKFL9iKVRCSpS6cX2lbFZuZSfJP0o23n6E0jdDyINIYlUygqnIg3NsHQnnXRSfC69o4zK0tx8880Zl0Id559_fsb59EGxWCsjjZQBZWRP9pUL5fSBEmNmxrj2yiuvlMGDB1vUcnwhsYPpjfmiGbOniTEgykgF1sRTzIJo5hEnnWYNAojJvefrLcp8ZMzPY6Vvl9ll2OgR0rfPHNJn3hk6Tcd06aR-QiN__FnmmXsuGTNtgszXe4B8M-JbmaNzHxk19WeZc7Y51ZNxhvw4fLR0Ub3MT-PGyiLzLyDDJo6SHtO7yFyr9pfjtzw-joUqtWdI0Plogw02EH5IPrgVMJzXj1o8nEeSyGeJCmXzdef5Xm-99cIp2zJUwJoViOFX165dTS_F8xuI2Czo_fffN2l_5513FqQBpt7gmeaHKZ_pRbJRGFJuuOGGGZdXWWWVrMpidD5JfRLDRfRjuaQrCkWXBmF5K4cqhXWou9Q-xFYwHlxflifAWL9b0xfoCKxHz-4yeeoU6dmtp4yaMlq6de8mkzpOUsWnrgfWYbqtA2YfH31BTU-kboq2jI9GzkMsUtiE8yI6JP1GMYwzXRLDO13yJ5ui1TIW8Q-9ST5CIXrQQQfZy05_eBHRJ6I_YZif_GjmKweFKZQMTuWYlzqpiGa4g-IeL-w0Lb300vFUGDCcp556Si688ELBLI0bADigsmA4mXQ7oBzaCqG0TRO-QmlKtilcg1Hm62-oI93HkL_QtlJYh3pK7UPMgHxZngBhfW_RAekSXqZLgHsQGW9MRBXRrIAKk1FeY-ex-sBXLA3e03opQmGt5-y8JYQDcV69qWFKWhhpsjn4WcIi_vGy5yNWY7lFwxt0-CBIHfPNN58lx9SM_iTfC5ksF-YBMQ9RkmBqSZMy5fMiY6UqZGVDmuKHFIauBiX6NddcY_5I--23X7KaOCwDBpeU-tDzYAWrBAXGQ_uZvK1UqhTWpdYb0usjN5N8WZ6ARH1vebkm6FLMMBHlQjMlF9udrlNzKBPhHFN0qDKatcMm6nLNw74bLmM1cv7br4fKOF2-59MPPpH_DP6PDPnvN_LlB1_J6G9HyXuv_lu-e_db-ejtj7WMqE19XfBMRtpBgRyYD4z15ZdftpsD4yyGsGgxpLnvvvsykqMUTpbBkIjhHr5LSVK9iuAjFAwpqpeyoRgMkCEbVqBrr73WsqC-SNNqq61mkhbMNElBIZ08V-4-7glQWBqr1HKKxRpJD8bJr5IUS0DFFOrL8hSDUnXTYCp-_cZfXCu-l5lf_x-lpbVqjK4ZBo2RzPmZC_ZALf3p4UbBPCUkwN-Hl5SXGxM2Lzem36CfgVlkE_XTVSClMVw69NBDzYcIyy3PMJJUUgeEAx91wfCQJAhfYNpV3ElY3XfVVVe1ojmPiZ50mMeZeQATOBId59OEnvSMM84wnekuu-xigbIwCqxp5CkkCabLy3aMKwD6sFwMiCEj0lqakA6xQBaLNcNImA9tR2_EkLgS1JzLeYlAwDRl8_vB_BeUdaTnJgM2Im4QD9Pl-HHbIcCLtcq-v5Y3bnwzoxK1dEm_JfrJXEvNJT3n6il9FuytyzRPkbE_jJV5lh8g0yYrV9GXYrYBvVQaGhu_HGoNk05dO8mU8VPsXHO3Zhn6r-_s5cuooIIHPOT0Az8ZmAUOe8Q3YU5HgczQBwZQDKFLwgkRsz_mYySiiy--2PxVQn4YBYYXdDl__OMf5bTTTjMfJJTLGF0C4RsHU8JQQxkQvjdExq-11lohWcaWaWV5eWFUDNF48XFlQXoqNNzLKCjHAdhQFub9bIS0xy9NO-20kzGgYrHGHQFJjnuy7bbbCl7QlaA2WResEg3zMspDACfRh4c_JJ17dRFbAH6ajsWUt0T6E92P_vebMZX9GTJ9iorVup0xdeZvug7NELc7dWxWPU8nG2p16thJOnfqLF06d5HOzZ1l5A8j5cJzLjSHvPJaWVwuJAy8oBdS57fW6JxCbfgUMbRDCZ2LkCCx5mLpyiWh4CeEtzKMK59CnfZ_pYrwhRdeOKP9SHDkxSESZtdaYmoSViyGiRYb_pKus1isf_zxR2t7PgzTZec7dgaUD506vIZV48KLL5QeGv_F1zH5Q2_BMVIAW47Dj3PsJ-drrsPu11ST0ceBJ8PIpPPj8ccfbwr2F198MafkVGpHkFBgbFjn6omcAdXT3fK21h0C6kRo-iv8Y9CbvPXWW6avOeecc4RrlSIsbYSIoLtC-V4v5AyoXu6Ut7NuEUB3ih4G5oAOCMU2v0oTsZoMjdLuAJWup5LlOQOqJJpeliPgCJSEQOwHVFIuT-wIOAKOQAUQcAZUARC9CEfAESgPAWdA5eHmuRwBR6ACCDgDqgCIXoQj4AiUh4AzoPJw81yOgCNQAQScAVUARC_CEXAEykPAGVB5uHkuR8ARqAACzoAqAKIX4Qg4AuUh4AyoPNw8lyPgCFQAAWdAFQDRi3AEHIHyEHAGVB5unssRcAQqgIAzoAqA6EU4Ao5AeQg4AyoPN8_lCDgCFUDAGVAFQPQiHAFHoDwEnAGVh5vncgQcgQog4AyoAiB6EY6AI1AeAs6AysPNczkCjkAFEHAGVAEQvQhHwBEoDwFnQOXh5rkcAUegAgg4A6oAiF6EI-AIlIeAM6DycPNcjoAjUAEEnAFVAEQvwhFwBMpDwBlQebh5LkfAEagAAs6AKgCiF-EIOALlIeAMqDzcPJcj4AhUAAFnQBUA0YtwBByB8hBwBlQebp7LEXAEKoCAM6AKgOhFzFoEvv_-e3nooYes0ldffVXefffdshswceLEsvL-5z__kSeeeCJn3mQbcyYqcKHcthUo1i7_7W9_k7FjxxZM-tJLL8m___1vS3fnnXfKmDFjCuYpJYEzoFLQ8rQ1gcAnn3wif_nLX6wtr732WtkM6JlnnpGDDjqorD7dcccdMmXKlJx5k23MmSjPhda0LU-x8aXjjjtORo4cGR_n2oHp_Otf_7LLd911lzOgXED5-dpHYPz48fY1_e677-LGTps2TUaPHi2TJ0-Wjz_-WGbMmBFf-_HHHyWKIvnss89k3Lhx8fnkzn777Sc77bRTfGr69OnCy882ScOGDZP3338__upTD1IMdSe_6jCVjz76SKZOnRpnpx0cf_HFF_G5Z599VjbYYANr16RJk4Q03377bXw9vUN76Adto8-ByAeR95tvvrH9XG2DYdDmZH5wATvalmyzFaT_ctXLdbD99NNPre0hfb7tzTffLAMGDLD6wY2y__vf_2bgR37w-OCDD1qcz1Z289___nd57rnnsl3LOLfbbrvJ2muvnXEuHLz99tty7bXXyoknnigLLbRQOF1we8opp8gCCywgBxxwQMG0yQR0_OCDD5bNNttMtt566-SlVu-feeaZ0rdvXznssMNaXVapBZx88smy4IILGh5fffWVfeV32GEH-c1vflNqUVnT8wD369dPonffk-jFwTJo0OPSvXt3WXfddbKmL3iyQwdpOvTgOBkvAZIBQ6JRo0bJcsstJ6uttprsuuuucv3111t_OIfUss0229gz88YbbwhMhJdn4YUXNgb11FNPyVJLLSXLL7-8LL300vGDDj6HHnpoXB87f_zjH2WOOeYQrg0ePFi23XZbWWGFFeyFvvjiiw07MOTlJh310cZVVllFrrvuOpMCSHf66acLUsGDDz4oc845pwwdOlQeffRRWXbZZe1H215__XV5_PHH7bhHjx7C76ijjjLGRvpu3brZC_rwww9ntPHDDz-UHXfcUeaff35haMbQCgx4zujjmmuuKV9__bW1mXQnnXRSi7ZxDgaw2GKLyZAhQ6wdSyyxhPUbhsk7yDt6ySWXxHXnq5dEu-yyi3Ts2FFIB37HH398nDfbDrjCeEeMGCGHHHKI3Rf68N5778k999wjG220kSC5US64vfXWW3LhhRfKPvvsk624mee04mi--eaLf7179470SjTXXHPF57iuY0ZlmNnp3nvvtTw6Hs-eIMfZgQMHRttvv32Oq7lP61fK6lMGljtRmVeWWWaZ6Le__W2ZucvP9vzzz0fKHKKffvrJCtGH3fp4_vnnl19oIqfqTKx8Tk2_-LJoaocu0RSZ-WO_rF_HbnENqg-J-vTpE_Xq1StSySDShzHSF9L6sOWWW0b6oYg-__xzS__ll19GTU1NkX5IopdfftnS6Jfdrl199dWRfuhsf9555430g2D7KsFEXbp0ifTli_SDGSljs_NHH310dPbZZ9v-3HPPHT322GO2D3677757pFJPtMcee9g5_p133nmRvuR2fOutt0a_-93vbP-BBx6IlPlHKqXZsTKlSBmj7VPulVdeGW2xxRaRfmSj2267LfrrX_9q14488shIX8xIGWikkku04YYbRpdffnlGG6-44orohhtusPT8-_Wvfx3pC2vH9FGZn-2DS3Nzs-GSbNvw4cMjZV6RShaWjrKoF9IPZbT--utb3eCZpHz1qiQTYwumnTt3jpQJJrPbvn7oI2Uitg8fUIkpvmcq5dh5sFAp1Pbpv35AbP-HH36IFl98cWubncjyr1lvnvALdOmll4p2TvSGyBprrBFO593yhYYLwp3rne6__37p1KnTLO0GIveBBx4o-jKJfgDapG6k3J9__tnKbjryMOHHcIC-liK15mrc_vvvbxIBwxxlRJYMUVxfeJMu-ILz9eQLjYREn4MOhS85Eg-kL7nhgJQLIdFA-kGUFVdcUd58882sGDGEQamqL4ClR8JRRmH7fNn5ElPvK6-8EtdlF__3j_Obb765SYScYljHV_yqq66yFOuss469D5SrH6iMd4Y2K-OwdEjlKMaR9AKhZxo0aJCcdtpp1gaGPWATiPyQfpBtWDRhwoRwyba8i8og4pECQ1kkqIsuusiuMzLpoNIovyQVqhfJEFImaO1FYlFGGw_lkO5yEW3Vj7Vd5r0PkhFSKLjffvvtdk0_qIbH__3f_2UtaiZqWS-1PEnHEb8YJiC28RD96le_sod4ttlmM3EumYuxKWAjXtJJ5YbxDU6mK2afjgAQ9YUHPJ2PhxY9AuL2kksuKYCUjUjDeHyeeeaxdIjOgXr27NmiH1xjzIv4zsuCKI0eQ7_IJtZzHRGc4Qxto37GxqTN1QbyBHrkkUdM77DnnnuGUyVv82GtX9B4PM7QbvbZZ7d2pvtabh_CPdYveca96dq1q4n1KtXYy8JQm5cXhgCGPD8MHxiSoNcIeiBwZWjA_WQoFwh9BxgzjEnqQbiukpe9gDBa8vKswZD0K2xDE4bUKm3LWmutJShWYZRJ4ll48cUXbWjDs0PbaA9lQWDFvYQpqdRmz2Eyf9gPbQzHbI844ggbWjIU2WuvvWx4r8JAnCT5PKtkaEwovqg7pF100UXtI5U8H_ZpWzYqVC91BYIhwkh4L4IuKTDVkCa5ZegVKMn4YJQMqcNHnA8rbc9JaalIv1AmEqv5LX0p0rGzXUMc1QLtd9lll0XZhmCIkGE4h7hNeoYYQUSmcL2hBYdgiLbbbbddpA-C_Sjn1FNPtfKSQzBlTpE-OHaetKRjKIUYGAjxmqEB10IafRmju---OySJ0kMwhnvUj2gc8uiXJVLdRLTvvvvG-fQLHiGu6hfbyqcOfqr_MPE8Tphlhzbpi5FxpZQhWCGsGf6E9rBVBmB1pftabh8YGihjsKGIKlUz-sGBmnEj_UBFYAnp19Haw_MQMEW8P-OMM-z8VlttZem4xj2FKIPhHUMx-qAMw84zBDvhhBMilTzsvL4MtiWNvtg2zGAoFp5d_YDF15UZ2NCQZ2eRRRax8-FZ5VhHAFYHQzCGRxD3nnap4tqOwxCMZ4vfyiuvbOoKZYTxMJEhmuqFLL1KavYe3HjjjXbMEExfetvnn764VjbPJPcN0o--5QnPMkPAoLpgCMawMhvlq5chGOoXhm3vvPNOpMwnWxH2TGcbgq200kpxeoavQW3Bs8z9hfSDZvdPPxhx2vTOLyxQ71ixxJcO0ZThmr6cLbLhN8DXfNNNNxUd99uXCL8NrdyUVy0y5DlxzDHH2FcJJRdcGhGcL1iS-EpuvPHGJqZSD1_UF154wb46KEADXXDBBcIXEnEYaY4hCKIyX6ZcVhbEUPw9MEFSP0NN1deYNSKUG7YoNflyUjeKQjDA3yL4rIR06S190huXPl3UcTFYIw7zJeKLhiKa-5eLyukDEgvKe7BBOuaZQOpBuoGQGjinL6cwlEG5y9fbNv_WAAAROklEQVQXER6lLtIH2CoDsvRh2MMB7WV4xrPEPUhKC5ZY__3zn_805SfDLGUWJnmiSEZqRjJCWv_zn_9syZHWuMazy33neVh99dVt-LjzzjvbFukMKTb5ZQ91cX-RzMA9EJIebeTHcAglbJJQbh977LF2j_fee29RnY1JGsk06X0UvjxHGFkwHDA8R6pjCAg-4F2ICtXL_UFKx5p37rnnFiquqOu0C-MSIxXeSd4f7klOSnOkYiSgs846KyNbWgJ6-umnIwXaOHcyIRKDNiSWCApJQCpCR3zR9OYli4n0AbZyggQUJCIUoUkKfUHBC_HF46vLFyWQDsdMIaj6ETuVlAqUsVk9lJ-kIJ2kJSC1skQ6fo-T8sWiv6r_iM-ld1AAkkYtHBmXQh2FlNDFYq0PgklxyUqSfeU8ElA5fQhlouhGgRykGvql1qMICQ3ifurHwfDQlzZCuYoSOnxNUc6SR4c-lp5yNtlkE1PM64tv54IBImDKF5zn45prrrHr_FOmFSFpUFZ4RlBuc5x-drnO-fDsUDeGgPSzEwpHEiO9Mmo7hQSkPkmmIEYCykW0M5t0mCs958kDXoEYDfBMlkKF6qU8yq00cW-LoZJ0QAq8EcrAfARH5ccYHIUcnBa_AEx0EF-7XOPWZLl8ZbQTst566yVPm2mVL2ggTJB8hfjS4ScRiPE_xHifLy9fOKQBxqToIvihNMT0mY1UNLXTQbEZ0vAVyqYs5muS1Cf179_fxsK5pCvKo80QX91yqFJYh7rL6UPIq0Mn4YeyG8lCmaPoUMIkQe6lMlNLCq7oWZBE0DkEIi_SYJqyYR3S8BxQLs8JbgDcf3R8PHcQzxqEJASln13aUsyzY5n1H1IbEh_Pc5I4l49oZ1Jvki9tuEYe2hYICTabBBiuZ9sWqrfU8rLVke0c97YYKosB4YyUj1DeoYHnZUdZyIuoXzfz-dGxtD0s-fKHa1-pwhTCfyNJKLiSwDHcQVxW82Qyme3jR0J7IBgOPiaI6vhq8HLoV1b-8Ic_mEiOAi1JtBVCaZumbA9Tsk0hPQ8AL0cuCnWk-5grffp8pbAO5ZbTBxz5GCrhKwPBMPDz4fenP_3JLFkqUYhKkoYlRonwDDGsUDOu5UuL6mCSfAFJlA1LPHXxC4OZcQ8ZCvHByZY-1GsX9V-xz05Iz3PGvQ_PJkrldBtDWt8WRuAXMaJw2jgFXxr0IrkI7TtOU4wrMY8iiTBO56sHZXuI0mWhx4F5QFg9kgRTCyZlzqsC0_QbWKmQKNI_9EiB1lNpSn0_zDJHH9AtqPgem2xDOrbBQ5aHNBkHgx4g6c2bzFPqfmA8gRGVmp_x9i233NIqrEutM51ehzVmQUnfJ9LB0NB7cM_QEUE69I7vKf0P-i-sdUlCSk5bu9K4kwdGx0eCuCWkbsztONZB6Wctrdcp5dmhPJ5LnufwAcKREKnRqTwEymJAasmKfTiyVctQiy8RLz43GMK0h_kS0nGpbXP9C3EwiLsMae67776MpDCOZBkMiXjw8JdIEkxQrRnmwcp5XgS-jCgEGRahJMODG0oOBeyE_kOcp35e8GQcTFBIh3St2eKeAAWFballPau-NXiTF8IaSQ_Gya_SxNCJclFupxkGDID7BY7cJwj_MvqbVORyno9UknDtgPknKQytwjn8YfCbwUOacoMUi6EASj4nIU9yW-yzE_JguKBP4bkO531bHgLNfOW50RCOYcTMJIlYFa4jyQRC0lDzu73EjEt5-ZOEPgNrAy83vheMyXk4g76D9HwZw8NB2dxUXiQeZF58_G54sBgu8XDxoqKLYciBuM3QhvZyjLMaUgwvIZIEDlY8mEhiWF4YEvBicB6nL1zoefjRN2Bd46sYnMGS_eBhViWo4JyIFQcnK_x7ggMYUlgSP_Kic4CZ0ZeAa7LM9L4qYE0flosBMWQMeoxkXqRD2sQQBoYYsKZuJM-gCwtYIyGALZZA9EYMiStFvPgh3ALpQz2fbRiEXxEWQJgkFq6gH8Mywv1C98aWlxmrVJq5IK0ydMOJkbTo-tgP5dB-fFe4f4R6II0w3H_yySftmYHppp_NdJ-xLoFd-tnBGReL1qqrrpqRJdynddddN-O8H5SJgD4Y-u5HZklQ5az55mhRsS0fHwiVFCIVOSP15DQLgN4Uy4MFQB9m88kgj3o7mkYdq5iK1hE-NpzXByTSFzJSj1s7xiIBYeXADwK3evw6lGGY346axiP8FELbVGox1_1QFuexZmE1US9sq0tN3uaSTl2kC_WTl_LoG1YI2sz18CO9xtBYe_iXtAwFN3SVgMw_QxmX-f9QFvlouzLSSHUQZkGiH_oCmDu-Mr0IXw9VTkbKQOPys-0oI4n05cm4FKxgoZ3pbXB9VwkhUrNvjDX1HX744dYm8gSfDB02x74u-CpByb5yjBVMvYHZzaBi-kAG_FEoA58p6taPhPmBpC18pKU9PC-hX2oKt5AJjvWjQhK7X_phMKw5z7Oo0pTdy2AFI50yn0iVy3FZ-GhhHdThtfWZNMEPCJ-XNCnTznh2qAcLJ9imCd8Znuvg05S-7selIYDkEeFIpP4beeNg9OtpJZcSB8ODpMGCkX5h4lbBNMqNg-FB0S9m3jgYTKEqJls8Tq74Gx4wHLhUn2APmUo6WeNg1HPXnNwwU-pXOiMOhhdCFawWExSYQalxMAEUTNEwtGzOnyFNoS1Y0-9CJlVM1G398qjEFqm0Gzvr5Ws7LhE4rEG83EkGFPLhIgHDKkSY3ulfuRSenfCsp8vBJM4HhmfaqTIImBWsmDgYfUH02RBzHFPPU9vnH0MXhmFQOg6GIQxDr1kZB4OrPmI5up9c9dIXHPOCRQRnxGxxMKRjyIJTWpIYWjH0wqGM0BSGGGxLjYMJZRIn8_vf_96GTulI6pCm0Bas6XchCkrvQulacx2TdDAgFCoHJ7tCxPCRXyFqrV4mPDu56lF_JnvWk89_rrR-vjgEjHNw45KxMegc0K0whoaCz47yPPN_wMsxGzVaHAx6Jsb6TFkCk0VPgCUH5nPOOedYXBHTNwSCCZQUBxMy6hZTNFZC9GQo351qCwH0lfgboV-DUTlVBgGzgqEoxiWerzhENCvKN17AJCEloDRNEpYLlMX8-HqjOEwSUgEvrk6JYA5cKLDTlpJkevbxq8DcCdE26iViG5d5lNtIJUEis0RZ_hWqFx8llLIoTVFmEy6A6zrmW35BOiJCGiV6YML4EqH4RRmaJByvmPsGHxfaiRI6mJ-T6XLt8xHgAUcaba-EkUH1e_GHr5ZwwGjBs50M7aml9tVrW5qJNcFSQVwMHsK8eIi7WH7SBJPCKpQkmAWOXxBWGeJgggmUcyEeBSsHTKPYOBiGSKFtIQ6GFx9JJJvDIXUlqVC9WDPw38DKV6g86oUBYZGDScNEsxFxMAylmIIC5lYwDiZVCM6b7ZmCV3ctYkBsVqHnpBbbXett6oBiLXhyIgkgyeRyfcdEj_mcoQbEC4bZky0iai7RlJcRk3Vw3ioGFPLQntA2pKZgUi4mP2kK1RuCFYMOq9hyC6WDSRXril6oLL_uCDQyAs3hBaeTMJbAXLJ1GmaTjVA65iOGcqUwH8oiT7JtMAmYXylUqN5Syyu2bmc-xSLl6do7AplKnhLRIA4mzFhXYlZP3s4QYFoSlPe1QkHHWOn2MEpIe-TnqoPQkeANngz1yZW-Ec-3igF5HEwjPhJt0ydM18HI0TY1FF9qCPUpPkfxKfFET05xnC8nTKctl7zJV3etXGsVA6qVTng76gcBosizBa0iOeAKkgydwEBADCHBz-gm09OaJBkariPZloJBz5csF71gCPVJSmRE83M-aaFN1p8NYfSeMBziw5L5SIsbC-WxLYaIW8QARB_JAw7p9lBOrn4WU0ctppnpQViLLfM2tRkCTEH0v-lyWlUHvqlqPC2amBMahoKvE7NFYlXkxc22bA4OrrhG4HNGzB4SFEOb4KaAJZIyeEmRaLItBYOEwRQgoQysk5j608vx4FIBA8CRk-BXrL1YSJP1YylmPulA9IH4NOIeYagM6Yg_hDjGuVU97o05Med3CMQN-dNbrGw4tDIpPPGMlI8xCIZEuTi_5upnuqy6Oq6MQ7WXUk8IXHSRepRqEE5rfxrqVTQRN8f84ZAyjYi4OpVG8i6bQ8gM84-TThmVxQuqH5iVQXxdWBonVwgM54lLhJSJRSxTAzFDY1iOh5n7lIlkXfImWb9lTPzLteSN-p9ZOAl9hNT9JNJ1vxI5f9kNsYacCaE-xCoSo0efIWVccR9y9dMS1uk_l4Dq6nNRmcYefrjohHGtLwsJqBTCBwzCbwzJhyEQkkK-ZXOYPgX_MbzydXJ5m2MbR9F__OMfFh3PMCxXCAxGEn5EyuNTls2JEKkKy29YHJO5wpE4wowHof50P_HZyhXqQxhK8I1jZgB80hj6IWkhAUK4ruQiQpqCoy0hRQzH8vUz15I3ucqvpfPOgGrpbsyitui7rC_0LKosUU1yGo3wgjHsgDEwRxNL5zAFBkOWQMEDnWM8y5l7iClW-KEz4cWEgWQLgeHF5GWmPDzfmSg_WJ1C-So4VHzJmxDCRB0MzZgpEpcQ4t4CA8rne5Z0WSEfbYRy9dMu1uk_V0LX6Y1rlGaj02FGRLzdmaOIye7CS5ruI3oZgmkJ14AZQflCYHARYY4hdEV4MaNboWz8y4IZvi1CfZgzKuiD0EMRIQBlC_WxC0X8y9fPIrLXbBKXgGr21rSPhjGsYkpVhjpYf9Zbb72sYUABDUKGdHlkm_QsnMsVAoNUxWR2XGdyNNaAZz5xFL5tFeoDkySomKFfiA5ISnShzeVsc_WznLJqJU8HdFe10hhvR_tFAJM3Q48wNCsHCYZj2bzQWTcOixLDmUDoZNo61AfTfjHTjYQ2FbvN1c9i89dSOmdAtXQ3vC2OQDtD4JdPQjvruHfXEXAEqo9ARRmQx8FU_4Z6CxyBekKgogzI42Dq6dZ7Wx2B6iNgDMjjYKp_I7wFjkB7RKAJ70xiXvAEJRaG6UchzhGPQwwLnqZJIk4FD9ZDDjnE4njw-sTSAIU4GMycutJGztkDk-VhFsVHQ5f9sfXbmfYV3w3qCAGDxMEMHDhQWK-Jcm-66aZkEb7vCDgCdYhAE_O0MI_xiy--aIF7LBQXCPd1pKNkEB7XnnvuOZvnmRUviTTGxKnrMFk2ls4lcO-FF16wuZXzuZyHepLbEF1MsGGvXr1skTmuMwk8bWWhPqZTZRJ39yBIIuf7jkD9IdDscTD1d9O8xY5AoyDQzET0DJeyUTIOJ3mdJY-JqcErFY9PYniCNOJxMEmkfN8RcATyIdBU6SVvPA4mH9x-zRFwBJIINFdyyRuPg0lC6_uOgCNQCAELxWBulkoveeNxMIWg9-uOgCPgsWD-DDgCjkDVEKioJ3TVeuEVOwKOQF0i4AyoLm-bN9oRaAwEnAE1xn30XjgCdYmAM6C6vG3eaEegMRBwBtQY99F74QjUJQLOgOrytnmjHYHGQMAZUGPcR--FI1CXCDgDqsvb5o12BBoDAWdAjXEfvReOQF0i4AyoLm-bN9oRaAwEnAE1xn30XjgCdYmAM6C6vG3eaEegMRBwBtQY99F74QjUJQLOgOrytnmjHYHGQMAZUGPcR--FI1CXCDgDqsvb5o12BBoDAWdAjXEfvReOQF0i4AyoLm-bN9oRaAwEnAE1xn30XjgCdYmAM6C6vG3eaEegMRBwBtQY99F74QjUJQLOgOrytnmjHYHGQMAZUGPcR--FI1CXCDgDqsvb5o12BBoDAWdAjXEfvReOQF0i4AyoLm-bN9oRaAwEnAE1xn30XjgCdYmAM6C6vG3eaEegMRBwBtQY99F74QjUJQLOgOrytnmjHYHGQOD_Abf0sLD7SYcaAAAAAElFTkSuQmCC" /><!-- --></p>
+<p>Along with the spatial pattern of the input rates, the
+applicator/planter ab-line and harvester ab-line are drawn by
+default.</p>
+</div>
+</div>
+<div id="diagnose-the-trial-design" class="section level1">
+<h1>Diagnose the trial design</h1>
+<p>The <code>ofpetrial</code> package offers several functions to check
+the soundness of a trial design (see <a href="https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html">this
+article</a> for more details and examples).</p>
+<p>Here, let’s check the correlation between the seed and NH3 rates.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  cor_inputs <span class="ot">&lt;-</span> <span class="fu">check_ortho_inputs</span>(trial_design)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.002657785</span></span></code></pre></div>
+<p>The correlation coefficient is 0, which is certainly acceptable.</p>
+</div>
+<div id="make-a-trial-design-report" class="section level1">
+<h1>Make a trial design report</h1>
+<p>After creating a trial design you can download a trial report that
+serves as a guide for implementing the trial as well as a reminder of
+the equipment sizes, plot specifications, and treatment levels that were
+chosen. The report is saved as an html document named
+“trial_design_report.html”. Along with basic information about the
+design (total amount of inputs to be applied, number of replicates of
+each treatment level, plot size, etc.), the report also contains figures
+displaying how the provided ab-lines and machines will line up inside
+the trial plots.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_trial_report</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">td =</span> trial_design,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">folder_path =</span> <span class="fu">getwd</span>()</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="write-the-trial-design-files-for-implementation" class="section level1">
+<h1>Write the trial design files for implementation</h1>
+<p>Once you are satisfied with the trial design and the location of the
+ab-lines, you can write out all the necessary files as shape files for
+the machine operators to actually implement the trial.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_trial_files</span>(td, <span class="at">folder_path =</span> <span class="fu">getwd</span>(), <span class="at">zip =</span> <span class="cn">TRUE</span>, <span class="at">zip_name =</span> <span class="st">&quot;td-collection&quot;</span>)</span></code></pre></div>
+<p>Here, all the shape files (trial dsign, applicator/planter ab-line,
+and harvester ab-line) are packed in a zipped folder, named
+“td-collection.zip”.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

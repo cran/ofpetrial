@@ -1,0 +1,351 @@
+---
+title: "Trial Design Generation Report for _trial-name_"
+output:
+  bookdown::html_document2:
+    toc: false
+    number_sections: false
+---
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 20px;
+  }
+td {  /* Table  */
+  font-size: 16px;
+}
+h1.title {
+  font-size: 56px;
+}
+h1 { /* Header 1 */
+  font-size: 48px;
+}
+h2 { /* Header 2 */
+    font-size: 36px;
+}
+h3 { /* Header 3 */
+  font-size: 24px;
+}
+code.r{ /* Code block */
+    font-size: 16px;
+}
+</style>
+
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  cache = FALSE,
+  echo = TRUE,
+  error = TRUE,
+  warning = FALSE,
+  cache.lazy = FALSE,
+  message = FALSE,
+  fig.width = 12,
+  fig.height = 12
+)
+```
+
+```{r packages, message=FALSE, warning=FALSE, include=FALSE}
+all_trial_info <- readRDS(file.path("_all-trial-info-here_"))
+machine_table <- readRDS(file.path("_machine-table-here_"))
+unit_system <- all_trial_info$unit_system[1]
+# === packages ===#
+# library(bookdown)
+# library(pracma)
+# library(furrr)
+# library(exactextractr)
+# library(sp)
+# library(sf)
+# library(agricolae)
+# library(lwgeom)
+# library(measurements)
+# library(stringr)
+# library(tmap)
+# library(raster)
+# library(tidyverse)
+# library(data.table)
+# library(purrr)
+# library(DT)
+# library(geojsonsf)
+# library(rmarkdown)
+# library(knitr)
+# library(parallel)
+# library(jsonlite)
+# library(smoother)
+# library(zip)
+```
+
+```{r warning=FALSE, include=FALSE}
+ab_line_1 <- data.table(
+  all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1, -3],
+  all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2, -3]
+) %>%
+  t(.) %>%
+  data.frame(.) %>%
+  dplyr::select("X2", "X1")
+rownames(ab_line_1) <- c(
+  "Point A",
+  "Point B"
+)
+
+ab_line_harvest <- data.table(
+  all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1, -3],
+  all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2, -3]
+) %>%
+  t(.) %>%
+  data.frame(.) %>%
+  dplyr::select("X2", "X1")
+rownames(ab_line_harvest) <- c(
+  "Point A",
+  "Point B"
+)
+```
+
+## Description of Field Trial Design
+
+Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, unit_system)`  Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. `r text_total_input_amounts(all_trial_info)`
+
+```{r td-map, echo=FALSE, fig.cap = "Trial Map", fig.height = 6, include = TRUE}
+viz(all_trial_info)
+```
+The number of plots assigned each targeted `r trial_text_inputs(all_trial_info)` rate is shown in Table \@ref(tab:rep-table). Inside the circumference of the field there are _headland-size_-_length-unit_ headlands and _sideland-size_-_length-unit_ sidelands, which are not part of the field trial.
+
+```{r rep-table, echo=FALSE, include = TRUE}
+rep_table <- all_trial_info %>%
+  rowwise() %>%
+  mutate(rep_table = list(
+    trial_design %>%
+      data.frame() %>%
+      dplyr::group_by(rate) %>%
+      dplyr::summarise(
+        Replicates = dplyr::n(),
+        .groups = "drop"
+      ) %>%
+      dplyr::select(Replicates)
+  ))
+
+rep_table$rep_table[[1]] %>%
+  knitr::kable(caption = paste0("Replicates of each ", to_title(rep_table$input_name[[1]]), " Target Rate"))
+```
+
+## AB-Lines
+
+The points for the AB-lines of each machine are in tables \@ref(tab:ab-lines) to \@ref(tab:ab-line-h). There are also shapefiles of the AB-lines included in the files downloaded on the main trial download button. 
+
+```{r ab-lines, echo=FALSE}
+kable(ab_line_1,
+  col.names = c("Lat", "Long"),
+  digits = 7,
+  caption = paste0("AB-line for ", to_title(all_trial_info$input_name[[1]]))
+)
+```
+
+```{r ab-line-h, echo=FALSE}
+kable(ab_line_harvest,
+  col.names = c("Lat", "Long"),
+  digits = 7,
+  caption = "AB-line for Harvest"
+)
+```
+
+## Steps in a Field Trial 
+
+### Step 1. Apply Inputs Border Areas
+
+Because areas near the border of the field are used to turn machinery around and may be exposed to different amounts of sun and wind than are areas in the field’s interior, data from border areas are not used in the experiment. Therefore, the first step in putting the trial design “in the ground” is to apply the input around border areas, in the same way the farmer would if not participating in the trial design. Figure \@ref(fig:headland-map) identifies the border areas for this field. 
+
+```{r headland-map, echo = FALSE, fig.cap = "Map of Field Borders", fig.height = 6, include = TRUE}
+all_trial_info$map_headlands[[1]] + tmap::tm_layout(
+  legend.outside = "TRUE",
+  frame = FALSE,
+  legend.title.size = 2,
+  legend.text.size = 1.5
+)
+```
+
+### Step 2.  Center the `r to_title(machine_table$machine_type[[1]])` on the AB-line Provided
+
+Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. `r text_sections_used(all_trial_info, machine_table, 1, unit_system)`
+
+```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+ab_maps <- list()
+poly_maps <- list()
+section_maps <- list()
+label_maps <- list()
+colors <- vector()
+labels_ablines <- vector()
+labels_polygons <- vector()
+
+for (i in 1:(nrow(machine_table) - 1)) {
+  ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
+  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
+  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
+  colors[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "#0072B2"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "lawngreen"
+  } else {
+    "#E69F00"
+  }
+  labels_polygons[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter"
+  } else {
+    "Harvester"
+  }
+  labels_ablines[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator AB-Line"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter AB-Line"
+  } else {
+    "Harvester AB-Line"
+  }
+}
+
+machine_table$map_plot_indiv[[1]] +
+  eval(parse(text = paste0(ab_maps, collapse = " + "))) +
+  eval(parse(text = paste0(poly_maps, collapse = " + "))) +
+  eval(parse(text = paste0(label_maps, collapse = " + "))) +
+  machine_table$width_line[[1]] +
+  tmap::tm_add_legend(
+    type = "line",
+    labels = na.omit(labels_ablines),
+    col = na.omit(colors),
+    lty = c("dashed"),
+    lwd = 3
+  ) +
+  machine_table$plot_legend[[1]] +
+  tmap::tm_layout(
+    legend.outside = TRUE,
+    frame = FALSE,
+    bg.color = "grey85",
+    legend.title.size = 2,
+    legend.text.size = 1.5
+  )
+```
+
+### Step 3. Uploading As-applied Data to Farmer’s Database 
+
+After the applying the input to put the trial in the ground, the “as-applied” data should be downloaded from the application monitor and uploaded into the farmer’s database.   
+
+### Step 4. Harvest 
+
+When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line inside a trial plot.
+
+```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Harvester inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+ab_maps <- list()
+poly_maps <- list()
+label_maps <- list()
+colors <- vector()
+labels_ablines <- vector()
+labels_polygons <- vector()
+
+for (i in nrow(machine_table)) {
+  ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
+  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
+  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
+  colors[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "#0072B2"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "lawngreen"
+  } else {
+    "#E69F00"
+  }
+  labels_polygons[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter"
+  } else {
+    "Harvester"
+  }
+  labels_ablines[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator AB-Line"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter AB-Line"
+  } else {
+    "Harvester AB-Line"
+  }
+}
+
+machine_table$map_plot[[1]] +
+  eval(parse(text = paste0(ab_maps, collapse = " + "))) +
+  eval(parse(text = paste0(poly_maps, collapse = " + "))) +
+  eval(parse(text = paste0(label_maps, collapse = " + "))) +
+  tmap::tm_add_legend(
+    type = "line",
+    labels = na.omit(labels_ablines),
+    col = na.omit(colors),
+    lty = c("dashed"),
+    lwd = 3
+  ) +
+  machine_table$plot_legend[[1]] +
+  tmap::tm_layout(
+    legend.outside = TRUE,
+    frame = FALSE,
+    bg.color = "grey85",
+    legend.title.size = 2,
+    legend.text.size = 1.5
+  )
+```
+
+### Alignment of all Machines in the Trial Plots
+
+Figure \@ref(fig:machine-alignment-all) shows all of the machinery inside a trial plot, showing the proper alignment of the machine passes based on the widths provided in the trial design function. While the AB-lines are not included in this figure for clarity, we can see where they are by following the arrow of the machines. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes_and_plot_width(machine_table, all_trial_info, unit_system)` If the harvester is correctly centered, then the `r text_harvester_passes(all_trial_info, unit_system)`
+
+```{r machine-alignment-all, echo=FALSE, fig.cap="Alignment of all Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+ab_maps <- list()
+poly_maps <- list()
+label_maps <- list()
+colors <- vector()
+polygons <- vector()
+
+for (i in 1:nrow(machine_table)) {
+  # ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
+  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
+  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
+  colors[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "#0072B2"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "lawngreen"
+  } else {
+    "#E69F00"
+  }
+  polygons[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter"
+  } else {
+    "Harvester"
+  }
+}
+
+machine_table$map_plot[[1]] +
+  # eval(parse(text = paste0(ab_maps, collapse = " + "))) +
+  eval(parse(text = paste0(poly_maps, collapse = " + "))) +
+  eval(parse(text = paste0(label_maps, collapse = " + "))) +
+  # tm_add_legend(
+  #   type = "line",
+  #   labels = c("Harvester AB-line", "Planter AB-line", "Applicator AB-line"),
+  #   col = c("#E69F00", "#009E73", "#0072B2"),
+  #   lty = c("dashed", "dashed", "solid"),
+  #   title = "AB-Lines"
+  # ) +
+  machine_table$plot_legend[[1]] +
+  tmap::tm_layout(
+    legend.outside = TRUE,
+    frame = FALSE,
+    bg.color = "grey85",
+    legend.title.size = 2,
+    legend.text.size = 1.5
+  )
+```
+
+### Step 5.  Uploading Raw Yield Data into Farmer’s Database 
+
+After the harvest, the raw yield data should be downloaded from the yield monitor and uploaded into the farmer’s database. 
+
+### Step 6.  Uploading Field Characteristics Spatial Data into Farmer’s Database 
+
+With a boundary file, various spatial “characteristics” data can uploaded from public sources.  For example, data for virtually all agricultural fields in the USA can be downloaded from the USDA Natural Resources Conservation Service’s Web Soil Survey webpage (https://websoilsurvey.nrcs.usda.gov/app/) provides public access to the Soil Survey Geographic (SSURGO) Database, which contains soil maps.  Other data, such as elevation data, weather data, and infrared satellite imagery are accessible through public sources. 
+
