@@ -1,7 +1,7 @@
 Package: ofpetrial
 Type: Package
 Title: Design on-Farm Precision Field Agronomic Trials
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
   c(
     person(
@@ -27,13 +27,14 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
 Imports: data.table, ggplot2, sf, lwgeom, purrr, tidyr, tibble, ggpubr,
-        ggExtra, terra, zip, rmarkdown, tmap, magrittr, dplyr, bookdown
+        ggExtra, terra, zip, rmarkdown, tmap, magrittr, dplyr,
+        bookdown, leaflet
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 Suggests: knitr
 NeedsCompilation: no
-Packaged: 2024-05-08 12:48:45 UTC; tmieno2
+Packaged: 2024-05-14 13:00:49 UTC; tmieno2
 Author: Taro Mieno [aut, cre, cph] (<https://orcid.org/0000-0002-0614-0771>),
   Brittani Edge [aut, ctb]
 Repository: CRAN
-Date/Publication: 2024-05-08 14:00:02 UTC
+Date/Publication: 2024-05-15 08:50:03 UTC

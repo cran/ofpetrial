@@ -40,7 +40,8 @@ st_tilt <- function(data_sf, angle, base_sf = FALSE, merge = TRUE) {
   data_geom <- sf::st_geometry(data_sf)
 
   data_tilted <- ((data_geom - base_point) * rot(angle / 180 * pi) + base_point) %>%
-    sf::st_set_crs(sf::st_crs(data_sf))
+    sf::st_set_crs(sf::st_crs(data_sf)) %>%
+    st_make_valid()
 
   if (merge == TRUE) {
     data_sf$geometry <- data_tilted
@@ -188,38 +189,80 @@ get_angle_lines <- function(line_1, line_2) {
 #+ Create strips
 #++++++++++++++++++++++++++++++++++++
 create_strips <- function(field, plot_heading, plot_width, radius) {
-  circle <- sf::st_buffer(st_centroid_quietly(field), radius)
+  field_centroid <- st_centroid_quietly(field)
+  circle <- sf::st_buffer(field_centroid, radius)
 
-  strips <-
-    sf::st_make_grid(circle, cellsize = c(plot_width, radius * 2 + 50)) %>%
-    sf::st_as_sf() %>%
-    cbind(., sf::st_coordinates(st_centroid_quietly(.))) %>%
-    data.table() %>%
-    .[order(X), ] %>%
-    .[, group := .GRP, by = .(X, Y)] %>%
-    setnames("x", "geometry") %>%
-    sf::st_as_sf()
+  #++++++++++++++++++++++++++++++++++++
+  #+ get direction vectors
+  #++++++++++++++++++++++++++++++++++++
+  #--- get the vector (direction machines run)  ---#
+  ab_xy <- sf::st_geometry(plot_heading)[[1]][2, ] - sf::st_geometry(plot_heading)[[1]][1, ]
 
-  vertical_line <-
-    rbind(
-      c(0, 0),
-      c(0, 10)
+  #--- distance of the vector ---#
+  ab_length <- sqrt(sum(ab_xy^2))
+
+  #--- normalize (distance == 1) ---#
+  ab_xy_nml <- ab_xy / ab_length
+
+  #--- create a vector that is perpendicular to ab_xy ---#
+  ab_xy_nml_p90 <- ab_xy_nml %*% rotate_mat_p90
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Get the line along which strips are created
+  #++++++++++++++++++++++++++++++++++++
+  field_centroid_xy <- st_coordinates(field_centroid)
+  starting_point <- field_centroid_xy + ab_xy_nml_p90 * radius * 2
+  end_point <- field_centroid_xy - ab_xy_nml_p90 * radius * 2
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Create strips
+  #++++++++++++++++++++++++++++++++++++
+
+  make_polygon <- function(base_point, radius, plot_width) {
+    point_0 <- base_point + ab_xy_nml * radius * 2
+    point_1 <- point_0 + ab_xy_nml_p90 * plot_width
+    point_2 <- point_1 - ab_xy_nml * radius * 4
+    point_3 <- point_2 - ab_xy_nml_p90 * plot_width
+    point_4 <- point_0
+
+    temp_polygon <- rbind(
+      point_0,
+      point_1,
+      point_2,
+      point_3,
+      point_4
     ) %>%
-    sf::st_linestring() %>%
-    sf::st_sfc() %>%
-    sf::st_set_crs(sf::st_crs(field)) %>%
-    sf::st_as_sf()
+      list() %>%
+      sf::st_polygon() %>%
+      st_sfc() %>%
+      st_as_sf()
+
+    return(temp_polygon)
+  }
+
+  num_strips <- ceiling(sqrt(sum((starting_point - end_point)^2)) / plot_width) + 1
+
+  base_points <-
+    rep(1, num_strips + 1) %*% starting_point - (0:num_strips) %*% ab_xy_nml_p90 * plot_width
 
   strips <-
-    st_tilt(
-      data_sf = strips,
-      angle = get_angle_lines(line_1 = plot_heading, line_2 = vertical_line),
-      base_sf = circle,
-      merge = TRUE
-    )
+    lapply(
+      1:nrow(base_points),
+      \(x) {
+        base_point <- base_points[x, ]
+        make_polygon(base_point, radius, plot_width)
+      }
+    ) %>%
+    rbindlist() %>%
+    data.table::setnames(names(.), "geometry") %>%
+    st_as_sf() %>%
+    st_set_crs(st_crs(field)) %>%
+    .[field, ] %>%
+    dplyr::mutate(group = 1:nrow(.))
 
   return(strips)
 }
+
 
 #++++++++++++++++++++++++++++++++++++
 #+ Transform to the appropriate UTM
@@ -532,7 +575,9 @@ make_harvest_path <- function(harvester_width, harvest_ab_line, field_sf) {
 
   #--- create strips ---#
   #* only the angle of plot is used from plot_heading
-  strips <- create_strips(field_sf, plot_heading, harvester_width, radius)
+  strips <-
+    create_strips(field_sf, plot_heading, harvester_width, radius) %>%
+    st_make_valid()
 
   # ggplot() +
   #   geom_sf(data = strips, aes(fill = group)) +

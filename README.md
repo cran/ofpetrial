@@ -10,10 +10,20 @@
 
 The `ofpetrial` package allows the user to design agronomic input
 experiments in a reproducible manner without using ArcGIS or QGIS. The
-vignette for this package is
-[here](https://difm-brain.github.io/ofpetrial/).
+[vignette](https://difm-brain.github.io/ofpetrial/) for this package
+provides more detailed guidance on how to use the package.
 
 ## Installation
+
+### CRAN version
+
+You can install the CRAN version of the `ofpetrial` package.
+
+``` r
+install.packages("ofpetrial")
+```
+
+### Development version
 
 You can install the development version of ofpetrial from
 [Github](https://github.com/DIFM-Brain/ofpetrial):
@@ -66,7 +76,7 @@ exp_data <-
 viz(exp_data, type = "layout", abline = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 ### Assign rates
 
@@ -89,18 +99,18 @@ n_rate_info <-
 dplyr::glimpse(n_rate_info)
 #> Rows: 1
 #> Columns: 12
-#> $ input_name          <chr> "NH3"
-#> $ design_type         <chr> "ls"
-#> $ gc_rate             <dbl> 180
-#> $ unit                <chr> "lb"
-#> $ tgt_rate_original   <list> <100, 140, 180, 220, 260>
-#> $ tgt_rate_equiv      <list> <82.0, 114.8, 147.6, 180.4, 213.2>
-#> $ min_rate            <lgl> NA
-#> $ max_rate            <lgl> NA
-#> $ num_rates           <int> 5
-#> $ rank_seq_ws         <list> <5, 4, 3, 2, 1>
-#> $ rank_seq_as         <list> <NULL>
-#> $ rate_jump_threshold <lgl> NA
+#> $ input_name          [3m[38;5;246m<chr>[39m[23m "NH3"
+#> $ design_type         [3m[38;5;246m<chr>[39m[23m "ls"
+#> $ gc_rate             [3m[38;5;246m<dbl>[39m[23m 180
+#> $ unit                [3m[38;5;246m<chr>[39m[23m "lb"
+#> $ tgt_rate_original   [3m[38;5;246m<list>[39m[23m <100, 140, 180, 220, 260>
+#> $ tgt_rate_equiv      [3m[38;5;246m<list>[39m[23m <82.0, 114.8, 147.6, 180.4, 213.2>
+#> $ min_rate            [3m[38;5;246m<lgl>[39m[23m NA
+#> $ max_rate            [3m[38;5;246m<lgl>[39m[23m NA
+#> $ num_rates           [3m[38;5;246m<int>[39m[23m 5
+#> $ rank_seq_ws         [3m[38;5;246m<list>[39m[23m <5, 4, 3, 2, 1>
+#> $ rank_seq_as         [3m[38;5;246m<list>[39m[23m <NULL>
+#> $ rate_jump_threshold [3m[38;5;246m<lgl>[39m[23m NA
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots.
@@ -115,7 +125,7 @@ Here is the visualization of the trial design done by `viz`.
 viz(trial_design)
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 Along with the spatial pattern of the input rates, the
 applicator/planter ab-line and harvester ab-line are drawn by default.
