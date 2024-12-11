@@ -1,7 +1,7 @@
 Package: ofpetrial
 Type: Package
 Title: Design on-Farm Precision Field Agronomic Trials
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
   c(
     person(
@@ -15,7 +15,8 @@ Authors@R:
       given = "Brittani",
       family = "Edge",
       role = c("aut", "ctb"),
-      email = "bedge2@illinois.edu"
+      email = "bedge2@illinois.edu",
+      comment = c(ORCID = "0009-0005-2051-1048")
     )
   )
 Maintainer: Taro Mieno <tmieno2@unl.edu>
@@ -25,7 +26,7 @@ Description: A comprehensive system for designing and implementing on-farm preci
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports: data.table, ggplot2, sf, lwgeom, purrr, tidyr, tibble, ggpubr,
         ggExtra, terra, zip, rmarkdown, tmap, magrittr, dplyr,
         bookdown, leaflet
@@ -33,8 +34,8 @@ VignetteBuilder: knitr
 Depends: R (>= 2.10)
 Suggests: knitr
 NeedsCompilation: no
-Packaged: 2024-05-14 13:00:49 UTC; tmieno2
+Packaged: 2024-12-11 22:48:17 UTC; tmieno2
 Author: Taro Mieno [aut, cre, cph] (<https://orcid.org/0000-0002-0614-0771>),
-  Brittani Edge [aut, ctb]
+  Brittani Edge [aut, ctb] (<https://orcid.org/0009-0005-2051-1048>)
 Repository: CRAN
-Date/Publication: 2024-05-15 08:50:03 UTC
+Date/Publication: 2024-12-11 23:00:02 UTC

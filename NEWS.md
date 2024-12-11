@@ -1,8 +1,13 @@
+# ofpetrial 0.1.2
+
++ add `assign_rates_conditional()`, which assign rates to experimental plots for a single input given existing trial designs for another input.
+
 # ofpetrial 0.1.1
 
 + option of using leaflet to see experimental plots on a satellite image of the field was added to `viz()` 
 + `create_strips()` (an internal function) was overhauled to pass R CMD check on Fedora with ATLAS. Specifically, `st_tilt()`, which used to be used in the function, has been abandoned.
 + fixed the bug in `viz()` which presented `gc_rate`
+
 
 # ofpetrial 0.1
 
