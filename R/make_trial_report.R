@@ -57,9 +57,9 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
     dplyr::mutate(map_headlands = list(
       tmap::tm_shape(trial_design) +
         tmap::tm_polygons(
-          col = "type",
-          title = "Type of Field Area",
-          palette = c("red", "grey")
+          fill = "type",
+          fill.legend = tmap::tm_legend(title = "Type of Field Area"),
+          fill.scale = tmap::tm_scale_categorical(values = c("red", "grey"))
         )
     )) %>%
     dplyr::mutate(total_input = list(
@@ -79,8 +79,7 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
         width = c(td$harvester_width[1], td$machine_width),
         input_name = c(NA, td$input_name),
         machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
-        ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]])
-      ) %>%
+        ab_line = list(all_trial_info$harvest_ab_lines[[1]][1, ], all_trial_info$ab_lines[[1]])) %>%
       dplyr::mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       dplyr::mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
@@ -106,8 +105,7 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
         width = c(td$harvester_width[1], td$machine_width),
         input_name = c(NA, td$input_name),
         machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
-        ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]], td$ab_lines[[2]])
-      ) %>%
+        ab_line = list(all_trial_info$harvest_ab_lines[[1]][1, ], all_trial_info$ab_lines[[1]], all_trial_info$ab_lines[[2]])) %>%
       dplyr::mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
       dplyr::mutate(sections_used = c(1, (1 / all_trial_info$machines_in_plot))) %>%
       dplyr::mutate(height = max(width) / 4) %>%
@@ -451,7 +449,7 @@ text_sections_used <- function(all_trial_info, machine_table, index, unit_system
       paste0(
         "Although the ", machine_table$machine_type[[index]], " is ", machine_table$width[[index]],
         " meters wide, the plots are ",
-        all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
+        all_trial_info %>% dplyr::filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
         " meters wide, using ",
         as.character(get_number_in_english(machine_table$sections_used[[index]])),
         " sections of the machine in the trial plots."
@@ -460,7 +458,7 @@ text_sections_used <- function(all_trial_info, machine_table, index, unit_system
       paste0(
         "Although the ", machine_table$machine_type[[index]], " is ", conv_unit(machine_table$width[[index]], "meters", "feet"),
         " feet wide, the plots are ",
-        all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "meters", "feet"),
+        all_trial_info %>% dplyr::filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "meters", "feet"),
         " feet wide, using ",
         as.character(get_number_in_english(machine_table$sections_used[[index]])),
         " sections of the machine in the trial plots."
@@ -633,7 +631,7 @@ get_field_size <- function(trial_design, land_unit) {
 
 get_plot_number <- function(trial_design) {
   trial_design %>%
-    filter(type == "experiment") %>%
+    dplyr::filter(type == "experiment") %>%
     nrow()
 }
 
@@ -776,7 +774,7 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 
 # trial_plot <- machine_table$trial_plot[[1]]
 # move_vec <- machine_table$move_vec[[1]]
-# input <- machine_table$input_name[[1]]
+# input_name <- machine_table$input_name[[1]]
 # height <- machine_table$height[[1]]
 # unit_system <- "imperial"
 make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_info, height, input_name) {
@@ -799,7 +797,8 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
 
     trial_plot_coords <- trial_plot %>%
       st_coordinates() %>%
-      .[, -(3:4)] # remove the last two columns
+      .[, -(3:4)] %>% # remove the last two columns
+      as.data.frame()
 
     # find starting side of polygon (opposite of direction of move_vec)
     if (move_vec[1] >= 0 & move_vec[2] > 0) { # when we are moving in a general NE or N direction
@@ -832,10 +831,10 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
     plot_lines <- data.table(
       line = 1:4,
       distance = c(
-        st_distance(st_point(trial_plot_coords[1, ]), st_point(trial_plot_coords[2, ])),
-        st_distance(st_point(trial_plot_coords[2, ]), st_point(trial_plot_coords[3, ])),
-        st_distance(st_point(trial_plot_coords[3, ]), st_point(trial_plot_coords[4, ])),
-        st_distance(st_point(trial_plot_coords[4, ]), st_point(trial_plot_coords[1, ]))
+        st_distance(st_point(trial_plot_coords[1, ] %>% as.numeric(.)), st_point(trial_plot_coords[2, ] %>% as.numeric(.))),
+        st_distance(st_point(trial_plot_coords[2, ] %>% as.numeric(.)), st_point(trial_plot_coords[3, ] %>% as.numeric(.))),
+        st_distance(st_point(trial_plot_coords[3, ] %>% as.numeric(.)), st_point(trial_plot_coords[4, ] %>% as.numeric(.))),
+        st_distance(st_point(trial_plot_coords[4, ] %>% as.numeric(.)), st_point(trial_plot_coords[1, ] %>% as.numeric(.)))
       )
     ) %>%
       dplyr::mutate(diff = abs(plot_width - distance)) %>%
@@ -845,42 +844,42 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
 
     # find the line that is in the set of plot_lines and also contains the earlier point found
     if (1 %in% plot_lines & (setequal(point, trial_plot_coords[1, ]) | setequal(point, trial_plot_coords[2, ]))) {
-      point1 <- st_point(trial_plot_coords[1, ]) %>%
+      point1 <- st_point(trial_plot_coords[1, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point1 <- point1 + move_vec * height * 1.4
 
-      point2 <- st_point(trial_plot_coords[2, ]) %>%
+      point2 <- st_point(trial_plot_coords[2, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point2 <- point2 + move_vec * height * 1.4
     } else if (2 %in% plot_lines & (setequal(point, trial_plot_coords[2, ]) | setequal(point, trial_plot_coords[3, ]))) {
-      point1 <- st_point(trial_plot_coords[2, ]) %>%
+      point1 <- st_point(trial_plot_coords[2, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point1 <- point1 + move_vec * height * 1.4
 
-      point2 <- st_point(trial_plot_coords[3, ]) %>%
+      point2 <- st_point(trial_plot_coords[3, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point2 <- point2 + move_vec * height * 1.4
     } else if (3 %in% plot_lines & (setequal(point, trial_plot_coords[3, ]) | setequal(point, trial_plot_coords[4, ]))) {
-      point1 <- st_point(trial_plot_coords[3, ]) %>%
+      point1 <- st_point(trial_plot_coords[3, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point1 <- point1 + move_vec * height * 1.4
 
-      point2 <- st_point(trial_plot_coords[4, ]) %>%
+      point2 <- st_point(trial_plot_coords[4, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point2 <- point2 + move_vec * height * 1.4
     } else if (4 %in% plot_lines & (setequal(point, trial_plot_coords[4, ]) | setequal(point, trial_plot_coords[1, ]))) {
-      point1 <- st_point(trial_plot_coords[4, ]) %>%
+      point1 <- st_point(trial_plot_coords[4, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point1 <- point1 + move_vec * height * 1.4
 
-      point2 <- st_point(trial_plot_coords[1, ]) %>%
+      point2 <- st_point(trial_plot_coords[1, ] %>% as.numeric(.)) %>%
         as.matrix() %>%
         .[1, ]
       point2 <- point2 + move_vec * height * 1.4
@@ -928,11 +927,10 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
         lwd = 2
       ) +
       tmap::tm_shape(label_line, bbox = sf::st_bbox(trial_plot$geometry)) +
-      tmap::tm_text("label",
-        col = "red",
-        size = 1,
-        fontface = "bold",
-        along.lines = T
+      tmap::tm_labels("label",
+                      col = "red",
+                      size = 1,
+                      fontface = "bold"
       )
   } else {
     NULL
@@ -940,28 +938,25 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
 }
 
 # ab_line <- machine_table$ab_line[[1]]
-get_move_vec <- function(ab_line) {
-  lags <- sf::st_coordinates(ab_line) %>%
+get_move_vec <- function(ab_line){
+  lags <- st_coordinates(ab_line) %>%
     data.frame() %>%
-    dplyr::select(X, Y) %>%
-    dplyr::mutate(
-      dx = X - dplyr::lag(X, n = 1),
-      dy = Y - dplyr::lag(Y, n = 1)
-    )
+    dplyr::mutate(dx = X - dplyr::lag(X, n = 1),
+           dy = Y - dplyr::lag(Y, n = 1))
 
-  lag_vec <- c(lags$dx[2], lags$dy[2])
-  move_vec <- lag_vec / sqrt(sum(lag_vec^2))
+  vec <- c(lags$dx[2], lags$dy[2])
+  move_vec <- vec / sqrt(sum(vec^2))
 
   return(move_vec)
 }
 
-# ab_line <- machine_table$ab_line[[2]]
-# number_in_plot <- machine_table$number_in_plot[[2]]
-# trial_plot <- machine_table$trial_plot[[2]]
+# ab_line <- machine_table$ab_line[[1]]
+# number_in_plot <- machine_table$number_in_plot[[1]]
+# trial_plot <- machine_table$trial_plot[[1]]
 # move_vec <- machine_table$move_vec[[1]]
-# machine_id <- machine_table$machine_id[[2]]
-# machine_width <- machine_table$width[[2]]
-# height <- machine_table$height[[2]]
+# machine_id <- machine_table$machine_id[[1]]
+# machine_width <- machine_table$width[[1]]
+# height <- machine_table$height[[1]]
 
 find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_id, machine_width, height, all_trial_info) {
   normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
@@ -980,7 +975,8 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
   # get coordinates of the plot vertices
   trial_plot_coords <- trial_plot %>%
     sf::st_coordinates() %>%
-    .[, -(3:4)] # remove the last two columns
+    .[, -(3:4)] %>% # remove the last two columns
+    as.data.frame(.)
 
   # find starting side of polygon (opposite of direction of move_vec)
   if (move_vec[1] >= 0 & move_vec[2] > 0) { # when we are moving in a general NE or N direction
@@ -1013,10 +1009,10 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
   plot_lines <- data.table(
     line = 1:4,
     distance = c(
-      st_distance(st_point(trial_plot_coords[1, ]), st_point(trial_plot_coords[2, ])),
-      st_distance(st_point(trial_plot_coords[2, ]), st_point(trial_plot_coords[3, ])),
-      st_distance(st_point(trial_plot_coords[3, ]), st_point(trial_plot_coords[4, ])),
-      st_distance(st_point(trial_plot_coords[4, ]), st_point(trial_plot_coords[1, ]))
+      st_distance(st_point(trial_plot_coords[1, ] %>% as.numeric(.)), st_point(trial_plot_coords[2, ] %>% as.numeric(.))),
+      st_distance(st_point(trial_plot_coords[2, ] %>% as.numeric(.)), st_point(trial_plot_coords[3, ] %>% as.numeric(.))),
+      st_distance(st_point(trial_plot_coords[3, ] %>% as.numeric(.)), st_point(trial_plot_coords[4, ] %>% as.numeric(.))),
+      st_distance(st_point(trial_plot_coords[4, ] %>% as.numeric(.)), st_point(trial_plot_coords[1, ] %>% as.numeric(.)))
     )
   ) %>%
     dplyr::mutate(diff = abs(plot_width - distance)) %>%
@@ -1027,32 +1023,32 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
   # get center of line
   if (1 %in% plot_lines & (setequal(point, trial_plot_coords[1, ]) | setequal(point, trial_plot_coords[2, ]))) {
     cent <- st_linestring(rbind(
-      trial_plot_coords[1, ],
-      trial_plot_coords[2, ]
+      trial_plot_coords[1, ] %>% as.numeric(.),
+      trial_plot_coords[2, ] %>% as.numeric(.)
     )) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
   } else if (2 %in% plot_lines & (setequal(point, trial_plot_coords[2, ]) | setequal(point, trial_plot_coords[3, ]))) {
     cent <- st_linestring(rbind(
-      trial_plot_coords[2, ],
-      trial_plot_coords[3, ]
+      trial_plot_coords[2, ] %>% as.numeric(.),
+      trial_plot_coords[3, ] %>% as.numeric(.)
     )) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
   } else if (3 %in% plot_lines & (setequal(point, trial_plot_coords[3, ]) | setequal(point, trial_plot_coords[4, ]))) {
     cent <- st_linestring(rbind(
-      trial_plot_coords[3, ],
-      trial_plot_coords[4, ]
+      trial_plot_coords[3, ] %>% as.numeric(.),
+      trial_plot_coords[4, ] %>% as.numeric(.)
     )) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
   } else if (4 %in% plot_lines & (setequal(point, trial_plot_coords[4, ]) | setequal(point, trial_plot_coords[1, ]))) {
     cent <- st_linestring(rbind(
-      trial_plot_coords[4, ],
-      trial_plot_coords[1, ]
+      trial_plot_coords[4, ] %>% as.numeric(.),
+      trial_plot_coords[1, ] %>% as.numeric(.)
     )) %>%
       st_sfc() %>%
       st_sf() %>%
@@ -1192,6 +1188,9 @@ get_plots <- function(all_trial_info) {
   return(plots)
 }
 
+# ab_line <- machine_table$ab_line[[1]]
+# machine_type <- machine_table$machine_type[[1]]
+# trial_plot <- machine_table$trial_plot[[1]]
 tmap_abline <- function(ab_line, machine_type, trial_plot) {
   tmap::tm_shape(ab_line, bbox = st_bbox(trial_plot)) +
     tmap::tm_lines(
@@ -1207,6 +1206,9 @@ tmap_abline <- function(ab_line, machine_type, trial_plot) {
     )
 }
 
+# ab_line <- machine_table$ab_line[[1]]
+# machine_type <- machine_table$machine_type[[1]]
+# trial_plot <- machine_table$trial_plot[[1]]
 tmap_machine <- function(machine_poly, machine_type, trial_plot) {
   tmap::tm_shape(machine_poly, bbox = sf::st_bbox(trial_plot)) +
     tmap::tm_borders(col = if (machine_type == "planter") {
@@ -1217,14 +1219,14 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
       "#E69F00"
     }, lwd = 3) +
     tmap::tm_fill(
-      col = if (machine_type == "planter") {
+      fill = if (machine_type == "planter") {
         "lawngreen"
       } else if (machine_type == "applicator") {
         "#00A3FF"
       } else {
         "#E69F00"
       },
-      alpha = 1
+      fill_alpha = 1
     )
 }
 
@@ -1276,7 +1278,7 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
     map <- NA
   } else {
     plots <- trial_plot %>%
-      filter(input_name == input)
+      dplyr::filter(input_name == input)
 
     n_rates <- plots %>%
       dplyr::pull(rate) %>%
@@ -1290,10 +1292,9 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
         bbox = sf::st_bbox(plots)
       ) +
       tmap::tm_fill(
-        col = "rate",
-        palette = my_palette,
-        title = paste0("Trial Plot ", to_title(input), " Rate")
-      )
+        fill = "rate",
+        fill.scale = tmap::tm_scale_categorical(values = my_palette),
+        fill.legend = tmap::tm_legend(title = paste0("Trial Plot ", to_title(input), " Rate")))
   }
 
   return(map)
@@ -1308,7 +1309,7 @@ tmap_plot_legend <- function(trial_plot) {
     length() == 1) {
     legend <- tmap::tm_add_legend(
       title = "Trial Plots",
-      type = "symbol",
+      type = "symbols",
       labels = c("Trial Plot"),
       col = c("black"),
       shape = 0,
@@ -1324,7 +1325,7 @@ tmap_plot_legend <- function(trial_plot) {
     legend <-
       tmap::tm_add_legend(
         title = "Trial Plots",
-        type = "symbol",
+        type = "symbols",
         labels = c(paste0(to_title(plots[1]), " Trial Plot"), paste0(to_title(plots[2]), " Trial Plot")),
         col = c("black", "gray"),
         shape = 0,

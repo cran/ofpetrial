@@ -95,11 +95,11 @@ viz(trial_design, abline = TRUE)
 )
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  make_trial_report(
-#    td = trial_design,
-#    folder_path = getwd()
-#  )
+# make_trial_report(
+#   td = trial_design,
+#   folder_path = getwd()
+# )
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  write_trial_files(td, folder_path = getwd(), zip = TRUE, zip_name = "td-collection")
+# write_trial_files(td, folder_path = getwd(), zip = TRUE, zip_name = "td-collection")
 
